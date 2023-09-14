@@ -30,7 +30,8 @@ exports.WorkpodPage = class WorkpodPage {
         this.groupAndUsers = page.locator('.mat-tab-label-content', { hasText: 'Groups & Users' })
         this.publishCommentField = page.locator('#publish-comment')
         this.publishBtnModal = page.locator('#publish-btn')
-
+        this.confirmWorkpodNameField = page.locator('input[formcontrolname="confirmName"]')
+        this.deleteBtnInModal = page.locator('#confirm-btn')
     }
 
     async clickOnCheckBox(index) {
@@ -49,5 +50,10 @@ exports.WorkpodPage = class WorkpodPage {
     async enterPublishComment(comment) {
         await this.publishCommentField.type(comment)
         await this.publishBtnModal.click()
+    }
+
+    async enterWorkpodNameAndDelete(name) {
+        await this.confirmWorkpodNameField.type(name)
+        await this.deleteBtnInModal.click()
     }
 };

@@ -6,8 +6,7 @@ const { WorkpodPage } = require('../page-object/workpod-page')
 import credentials from '../test_data/credentials.json'
 import workpodData from '../test_data/workpod.json'
 
-
-test('Validate that user is able to create the workpod', async ({ page }) => {
+test('Validate that user is able to create the workpod and save it to draft.', async ({ page }) => {
     const loginPage = new LoginPage(page)
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -19,32 +18,37 @@ test('Validate that user is able to create the workpod', async ({ page }) => {
     await loginPage.submitButton.click()
     await page.title('Cloudpager')
 
+    await page.waitForTimeout(10000)
     await dashboardPage.workpodSideNav.click()
+    await page.waitForTimeout(10000)
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
     await workpodPage.addApplicationButton.click()
-    await workpodPage.table.isVisible()
+    // await workpodPage.table.isVisible()
+    await page.waitForTimeout(10000)
     await workpodPage.clickOnCheckBox(1)
     await workpodPage.clickOnCheckBox(2)
     await workpodPage.saveButton.click()
 
     await workpodPage.addUserGroupButton.click()
-    await workpodPage.table.isVisible()
+    // await workpodPage.table.isVisible()
+    await page.waitForTimeout(10000)
     await workpodPage.clickOnCheckBox(1)
     await workpodPage.clickOnCheckBox(2)
 
     await workpodPage.userTab.click()
-    await page.waitForTimeout(2000)
+    await page.waitForTimeout(10000)
     await workpodPage.clickOnCheckBox(1)
     await workpodPage.clickOnCheckBox(2)
     await workpodPage.saveButton.click()
+    await page.waitForTimeout(10000)
     await workpodPage.saveDraftButton.click();
 
     await expect(workpodPage.alertDialog).toContainText('New draft created.')
     await expect(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
-test('Validate that user is able to update the workpod', async ({ page }) => {
+test('Validate that user is able to edit the workpod and publish it', async ({ page }) => {
     const loginPage = new LoginPage(page)
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -90,3 +94,28 @@ test('Validate that user is able to update the workpod', async ({ page }) => {
     await workpodPage.enterPublishComment('Automated comment...')
     await expect(workpodPage.alertDialog).toContainText('have been published successfully.')
 })
+
+test('Validate that user is able to delete the workpod from the published tab.', async ({ page }) => {
+    const loginPage = new LoginPage(page)
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    await loginPage.openURL(credentials.login.url)
+    await loginPage.signInMicrosoft.click()
+    await loginPage.enterEmail(credentials.login.email)
+    await loginPage.enterPassword(credentials.login.password)
+    await loginPage.submitButton.click()
+    await page.title('Cloudpager')
+
+    await page.waitForTimeout(10000)
+    await dashboardPage.workpodSideNav.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.publishedSection.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.actionButton.click()
+    await workpodPage.deleteOption.click()
+    
+    await workpodPage.enterWorkpodNameAndDelete(workpodData.updatedName)
+    await expect(workpodPage.alertDialog).toContainText('Workpod deleted.')
+})
+
