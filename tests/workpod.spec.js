@@ -1,41 +1,37 @@
-const { test, expect, request } = require('@playwright/test');
+const { test, expect, request } = require('@playwright/test')
+const { LoginPage } = require('../page-object/login-page')
+const { DashboardPage } = require('../page-object/dashboard-page')
+const { WorkpodPage } = require('../page-object/workpod-page')
+
 import credentials from '../test_data/credentials.json'
+import workpodData from '../test_data/workpod.json'
 
-test('Workpod functionality', async ({ page }) => {
 
-    let email = credentials.login.email;
-    let password = credentials.login.password;
+test('Validate that user1 is able to login', async ({ page }) => {
+    const loginPage = new LoginPage(page)
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
 
-    await page.goto("https://staging.cloudpager.net/admin/applications/all");
-    await page.waitForLoadState('networkidle');
+    await loginPage.openURL(credentials.login.url)
+    await loginPage.signInMicrosoft.click()
+    await loginPage.enterEmail(credentials.login.email)
+    await loginPage.enterPassword(credentials.login.password)
+    await loginPage.submitButton.click()
 
-    await page.locator('span.mat-button-wrapper').click();
-    await page.locator('input[type="email"]').type(email)
-    await page.locator('input[type="submit"]').click();
+    await page.title('Cloudpager')
 
-    await page.locator('input[name="passwd"]').type(password);
-    await page.locator('input[type="submit"]').click();
-    await page.locator('input[type="submit"]').click();
-    await page.waitForTimeout(5000);
+    await dashboardPage.workpodSideNav.click()
+    await workpodPage.addWorkpod.click()
+    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
+    await workpodPage.addApplicationButton.click()
+    await workpodPage.table.isVisible()
+    await workpodPage.clickOnCheckBox(1)
+    await workpodPage.clickOnCheckBox(2)
+    await workpodPage.saveButton.click()
 
-    await page.title('Cloudpager');
-    await page.locator('a[href="/admin/workpods"]').click();
-    await page.waitForTimeout(5000);
-    await page.locator('#btnUploadApp').click();
-    await page.locator('#wb-name-input').click();
-    await page.locator('#wb-name-input').type('Nisar Pod');
-    await page.locator('#mat-input-1').click();
-    await page.locator('#mat-input-1').type('Automation Testing');
-    await page.locator('#add-app-btn > .mat-button-wrapper').click();
-
-    await page.locator('#mat-checkbox-30 .mat-checkbox-inner-container').click();
-    await page.locator('.mat-row:nth-child(3) > .cdk-column-select').click();
-    await page.locator('#mat-checkbox-6 .mat-checkbox-inner-container').click();
-    
-    await page.locator('#mat-dialog-0').click();
-    await page.locator('.btn-save').click();
-    // await page.locator('#add-app-btn > .mat-button-wrapper').click();
-    // await page.locator('#add-app-btn > .mat-button-wrapper').click();
-
+    await workpodPage.addUserGroupButton.click()
+    await workpodPage.table.isVisible()
+    await workpodPage.clickOnCheckBox(1)
+    await workpodPage.clickOnCheckBox(2)
+    await workpodPage.saveButton.click()
 })
-

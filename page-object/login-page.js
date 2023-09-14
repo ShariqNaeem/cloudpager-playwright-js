@@ -1,6 +1,4 @@
 const { expect } = require('@playwright/test');
-import credentials from '../test_data/credentials.json'
-
 exports.LoginPage = class LoginPage {
 
     /**
