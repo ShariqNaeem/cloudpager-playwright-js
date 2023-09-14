@@ -14,6 +14,13 @@ exports.WorkpodPage = class WorkpodPage {
         this.addUserGroupButton = page.locator('#add-user-group-btn')
         this.table = page.locator('table[role="grid"]')
         this.saveButton = page.locator('.dialog-button-container button.btn-save')
+        this.saveDraftButton = page.locator('.save-publish-container button.btn-secondary')
+        this.publishButton = page.locator('.save-publish-container button.btn-primary')
+        this.alertDialog = page.locator('[role="alertdialog"]')
+        this.successMessgae = page.locator('#header')
+        this.userTab = page.locator('div.mat-tab-label-content', { hasText: 'Users' })
+
+
     }
 
     async clickOnCheckBox(index) {

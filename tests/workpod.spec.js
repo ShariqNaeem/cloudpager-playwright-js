@@ -7,7 +7,7 @@ import credentials from '../test_data/credentials.json'
 import workpodData from '../test_data/workpod.json'
 
 
-test('Validate that user1 is able to login', async ({ page }) => {
+test('Validate that user is able to create the workpod', async ({ page }) => {
     const loginPage = new LoginPage(page)
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -33,5 +33,15 @@ test('Validate that user1 is able to login', async ({ page }) => {
     await workpodPage.table.isVisible()
     await workpodPage.clickOnCheckBox(1)
     await workpodPage.clickOnCheckBox(2)
+
+    await workpodPage.userTab.click()
+    await page.waitForTimeout(2000)
+    await workpodPage.clickOnCheckBox(1)
+    await workpodPage.clickOnCheckBox(2)
     await workpodPage.saveButton.click()
+    await workpodPage.saveDraftButton.click();
+
+    await expect(workpodPage.alertDialog).toContainText('New draft created.')
+    await expect(workpodPage.successMessgae).toContainText('Workpod Created')
 })
+
