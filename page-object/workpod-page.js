@@ -19,8 +19,8 @@ exports.WorkpodPage = class WorkpodPage {
         this.alertDialog = page.locator('[role="alertdialog"]')
         this.successMessgae = page.locator('#header')
         this.userTab = page.locator('div.mat-tab-label-content', { hasText: 'Users' })
-
-
+        this.draftsTab = page.locator('div.mat-tab-label-content', { hasText: ' Drafts ' })
+        this.publishedTab = page.locator('div.mat-tab-label-content', { hasText: ' Published ' })
     }
 
     async clickOnCheckBox(index) {
