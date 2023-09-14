@@ -1,4 +1,6 @@
 {
     "name": "Automation workpod name",
-    "description": "Automated description"   
+    "description": "Automated description",
+    "updatedName": "Automation Edited",
+    "updatedDescription": "Automated Description Edited"
 }

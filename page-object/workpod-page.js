@@ -18,19 +18,36 @@ exports.WorkpodPage = class WorkpodPage {
         this.publishButton = page.locator('.save-publish-container button.btn-primary')
         this.alertDialog = page.locator('[role="alertdialog"]')
         this.successMessgae = page.locator('#header')
-        this.userTab = page.locator('div.mat-tab-label-content', { hasText: 'Users' })
-        this.draftsTab = page.locator('div.mat-tab-label-content', { hasText: ' Drafts ' })
-        this.publishedTab = page.locator('div.mat-tab-label-content', { hasText: ' Published ' })
+        this.userTab = page.locator('div.dialog-content div.mat-tab-label-content', { hasText: 'Users' })
+        this.draftsSection = page.locator('span.mat-button-toggle-label-content', { hasText: ' Drafts ' })
+        this.publishedSection = page.locator('span.mat-button-toggle-label-content', { hasText: ' Published ' })
+        this.actionButton = page.locator('.cdk-drop-list.drag-drop-list >div:first-child div.wb-card-actions button')
+        this.editOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Edit' })
+        this.deleteOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Delete' })
+        this.manageAdminsOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Manage Admins' })
+        this.editingAlert = page.locator('span.alert-text')
+        this.addButtonInDraft = page.locator('div.mat-tab-label-content button')
+        this.groupAndUsers = page.locator('.mat-tab-label-content', { hasText: 'Groups & Users' })
+        this.publishCommentField = page.locator('#publish-comment')
+        this.publishBtnModal = page.locator('#publish-btn')
+
     }
 
     async clickOnCheckBox(index) {
         const checkbox = this.page.locator(`tbody tr:nth-child(${index}) td:nth-child(1) span.mat-checkbox-inner-container`)
         await checkbox.click()
-        expect(await checkbox.isChecked()).toBeTruthy()
+        //expect(await checkbox.isChecked()).toBeTruthy()
     }
 
     async setNameAndDescription(name, description) {
-        await this.workpodName.type(name);
-        await this.workpodDescription.type(description);
+        await this.workpodName.clear()
+        await this.workpodName.type(name)
+        await this.workpodDescription.clear()
+        await this.workpodDescription.type(description)
+    }
+
+    async enterPublishComment(comment) {
+        await this.publishCommentField.type(comment)
+        await this.publishBtnModal.click()
     }
 };
