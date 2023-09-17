@@ -119,3 +119,87 @@ test('Validate that user is able to delete the workpod from the published tab.',
     await expect(workpodPage.alertDialog).toContainText('Workpod deleted.')
 })
 
+test.only('End to End functionality of workpods', async ({ page }) => {
+    const loginPage = new LoginPage(page)
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    //Login Functionality
+    await loginPage.openURL(credentials.login.url)
+    await loginPage.signInMicrosoft.click()
+    await loginPage.enterEmail(credentials.login.email)
+    await loginPage.enterPassword(credentials.login.password)
+    await loginPage.submitButton.click()
+    await page.title('Cloudpager')
+
+    //Create a workpod but don't save it, just discard at the end
+    await page.waitForTimeout(10000)
+    await dashboardPage.workpodSideNav.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.draftsSection.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.actionButton.click()
+    await workpodPage.editOption.click()
+    await workpodPage.editingAlert.isVisible()
+
+    await workpodPage.setNameAndDescription(workpodData.updatedName, workpodData.updatedDescription)
+    await workpodPage.addButtonInDraft.click({ force: true });
+    await page.waitForTimeout(10000)
+    await workpodPage.clickOnCheckBox(3)
+    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.saveButton.click()
+
+    await page.waitForTimeout(10000)
+    await workpodPage.groupAndUsers.click()
+    await workpodPage.addButtonInDraft.click({ force: true })
+    await page.waitForTimeout(10000)
+    await workpodPage.clickOnCheckBox(3)
+    await workpodPage.clickOnCheckBox(4)
+
+    await workpodPage.userTab.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.clickOnCheckBox(3)
+    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.saveButton.click()
+
+    //Go to Drafts section and delete any existing Draft.
+    await page.waitForTimeout(10000)
+    await dashboardPage.workpodSideNav.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.draftsSection.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.deleteFirstWorkpod();
+
+    // Go to Published Workpod section and Edit any published workpod and then Save it as a Draft.
+    await page.waitForTimeout(10000)
+    await dashboardPage.workpodSideNav.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.publishedSection.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.actionButton.click()
+    await workpodPage.editOption.click()
+    await workpodPage.editingAlert.isVisible()
+
+    await workpodPage.setNameAndDescription(workpodData.updatedName, workpodData.updatedDescription)
+    //await page.waitForTimeout(10000)
+    await workpodPage.addButtonInDraft.click({ force: true });
+    await page.waitForTimeout(10000)
+    await workpodPage.clickOnCheckBox(3)
+    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.saveButton.click()
+
+    await page.waitForTimeout(10000)
+    await workpodPage.groupAndUsers.click()
+    await workpodPage.addButtonInDraft.click({ force: true })
+    await page.waitForTimeout(10000)
+    await workpodPage.clickOnCheckBox(3)
+    await workpodPage.clickOnCheckBox(4)
+
+    await workpodPage.userTab.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.clickOnCheckBox(3)
+    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.saveButton.click()
+    await workpodPage.saveDraftButton.click();
+
+})

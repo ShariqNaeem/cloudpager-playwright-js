@@ -9,7 +9,7 @@ exports.WorkpodPage = class WorkpodPage {
         this.page = page
         this.addWorkpod = page.locator('span.mat-button-wrapper', { hasText: ' Add Workpod ' })
         this.workpodName = page.locator('#wb-name-input')
-        this.workpodDescription = page.locator('#mat-input-1')
+        this.workpodDescription = page.locator('[formcontrolname="workpodDescription"]')
         this.addApplicationButton = page.locator('#add-app-btn')
         this.addUserGroupButton = page.locator('#add-user-group-btn')
         this.table = page.locator('table[role="grid"]')
@@ -32,6 +32,7 @@ exports.WorkpodPage = class WorkpodPage {
         this.publishBtnModal = page.locator('#publish-btn')
         this.confirmWorkpodNameField = page.locator('input[formcontrolname="confirmName"]')
         this.deleteBtnInModal = page.locator('#confirm-btn')
+        this.firstWorkpodName = page.locator('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge')
     }
 
     async clickOnCheckBox(index) {
@@ -55,5 +56,19 @@ exports.WorkpodPage = class WorkpodPage {
     async enterWorkpodNameAndDelete(name) {
         await this.confirmWorkpodNameField.type(name)
         await this.deleteBtnInModal.click()
+    }
+
+    async deleteFirstWorkpod() {
+        const workpodName = await this.page.evaluate(() => {
+            const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title');
+            const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge');
+            const parentText = parentElement.textContent.split(childElement.textContent);
+            return parentText[0];
+        });
+
+        await this.actionButton.click()
+        await this.deleteOption.click()
+        await this.enterWorkpodNameAndDelete(workpodName.trim());
+        await expect(this.alertDialog).toContainText('Workpod deleted.')
     }
 };
