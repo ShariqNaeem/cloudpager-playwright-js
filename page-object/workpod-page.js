@@ -9,7 +9,7 @@ exports.WorkpodPage = class WorkpodPage {
         this.page = page
         this.addWorkpod = page.locator('span.mat-button-wrapper', { hasText: ' Add Workpod ' })
         this.workpodName = page.locator('#wb-name-input')
-        this.workpodDescription = page.locator('#mat-input-1')
+        this.workpodDescription = page.locator('[formcontrolname="workpodDescription"]')
         this.addApplicationButton = page.locator('#add-app-btn')
         this.addUserGroupButton = page.locator('#add-user-group-btn')
         this.table = page.locator('table[role="grid"]')
