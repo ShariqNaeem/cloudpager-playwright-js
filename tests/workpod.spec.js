@@ -72,7 +72,7 @@ test('Go to Drafts section and delete any existing Draft.', async () => {
 
 })
 
-test.only('Go to Published Workpod section and Edit any published workpod and then Saved it as a draft', async () => {
+test('Go to Published Workpod section and Edit any published workpod and then Saved it as a draft', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
