@@ -25,7 +25,7 @@ test.afterAll(async () => {
     await page.close();
 });
 
-test('Create a workpod but dont save it, just discard at the end.', async () => {
+test('Go to Draft workpod, Edit it but dont save it, just discard at the end', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
@@ -41,22 +41,24 @@ test('Create a workpod but dont save it, just discard at the end.', async () => 
     await workpodPage.setNameAndDescription(workpodData.updatedName, workpodData.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
     await page.waitForTimeout(10000)
-    await workpodPage.clickOnCheckBox(3)
-    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.clickOnCheckBoxByText('1_appv_putty')
+    await workpodPage.clickOnCheckBoxByText('2_stp_notepad++')
     await workpodPage.saveButton.click()
 
     await page.waitForTimeout(10000)
     await workpodPage.groupAndUsers.click()
     await workpodPage.addButtonInDraft.click({ force: true })
     await page.waitForTimeout(10000)
-    await workpodPage.clickOnCheckBox(3)
-    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.clickOnCheckBoxByText('1NGroupTest_1')
+    await workpodPage.clickOnCheckBoxByText('1NGroupTest_2')
 
     await workpodPage.userTab.click()
     await page.waitForTimeout(10000)
-    await workpodPage.clickOnCheckBox(3)
-    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.clickOnCheckBoxByText('Auto User002')
+    await workpodPage.clickOnCheckBoxByText('Auto User003')
     await workpodPage.saveButton.click()
+    await workpodPage.discardDraft.click()
+    await expect(workpodPage.alertDialog).toContainText('has been removed from your drafts.')
 })
 
 test('Go to Drafts section and delete any existing Draft.', async () => {
@@ -68,7 +70,16 @@ test('Go to Drafts section and delete any existing Draft.', async () => {
     await page.waitForTimeout(10000)
     await workpodPage.draftsSection.click()
     await page.waitForTimeout(10000)
+
+    const workpodName = await workpodPage.firstWorkpodName.textContent()
     await workpodPage.deleteFirstWorkpod();
+    await expect(workpodPage.alertDialog).toContainText('Workpod deleted.')
+    
+    await page.waitForTimeout(10000)
+    await dashboardPage.workpodSideNav.click()
+    await page.waitForTimeout(10000)
+    await workpodPage.draftsSection.click()
+    await expect(await workpodPage.firstWorkpodName).not.toContainText(workpodName)
 
 })
 
@@ -85,24 +96,33 @@ test('Go to Published Workpod section and Edit any published workpod and then Sa
     await workpodPage.editOption.click()
     await workpodPage.editingAlert.isVisible()
 
-    await workpodPage.setNameAndDescription(workpodData.updatedName, workpodData.updatedDescription)
+    const randomName = workpodPage.generateString();
+    await workpodPage.setNameAndDescription(randomName, workpodData.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
     await page.waitForTimeout(10000)
-    await workpodPage.clickOnCheckBox(3)
-    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.clickOnCheckBoxByText('FileZilla_PowerShell')
+    await workpodPage.clickOnCheckBoxByText('2_appv_InstEdit')
     await workpodPage.saveButton.click()
 
     await page.waitForTimeout(10000)
     await workpodPage.groupAndUsers.click()
     await workpodPage.addButtonInDraft.click({ force: true })
     await page.waitForTimeout(10000)
-    await workpodPage.clickOnCheckBox(3)
-    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.clickOnCheckBoxByText('1NGroupTest_1')
+    await workpodPage.clickOnCheckBoxByText('1NGroupTest_2')
 
     await workpodPage.userTab.click()
     await page.waitForTimeout(10000)
-    await workpodPage.clickOnCheckBox(3)
-    await workpodPage.clickOnCheckBox(4)
+    await workpodPage.clickOnCheckBoxByText('Auto User002')
+    await workpodPage.clickOnCheckBoxByText('Auto User003')
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click()
+    await expect(workpodPage.alertDialog).toContainText('have been saved to your drafts.')
+
+    // await page.waitForTimeout(10000)
+    // await dashboardPage.workpodSideNav.click()
+    // await page.waitForTimeout(10000)
+    // await workpodPage.draftsSection.click()
+    // await page.waitForTimeout(10000)
+    // await expect(workpodPage.firstWorkpodName).toContainText(randomName);
 })

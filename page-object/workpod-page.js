@@ -32,11 +32,18 @@ exports.WorkpodPage = class WorkpodPage {
         this.publishBtnModal = page.locator('#publish-btn')
         this.confirmWorkpodNameField = page.locator('input[formcontrolname="confirmName"]')
         this.deleteBtnInModal = page.locator('#confirm-btn')
-        this.firstWorkpodName = page.locator('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge')
+        this.firstWorkpodName = page.locator('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title')
+        this.discardDraft = page.locator('#delete-wb-btn')
     }
 
     async clickOnCheckBox(index) {
         const checkbox = this.page.locator(`tbody tr:nth-child(${index}) td:nth-child(1) span.mat-checkbox-inner-container`)
+        await checkbox.click()
+        //expect(await checkbox.isChecked()).toBeTruthy()
+    }
+
+    async clickOnCheckBoxByText(name) {
+        const checkbox = this.page.locator(`//div[@class="dialog-content"]//td[contains(text(),"${name}")]`)
         await checkbox.click()
         //expect(await checkbox.isChecked()).toBeTruthy()
     }
@@ -58,6 +65,15 @@ exports.WorkpodPage = class WorkpodPage {
         await this.deleteBtnInModal.click()
     }
 
+    async firstWorkpodText() {
+        await this.page.evaluate(() => {
+            const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title');
+            const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge');
+            const parentText = parentElement.textContent.split(childElement.textContent);
+            return parentText[0];
+        });
+    }
+
     async deleteFirstWorkpod() {
         const workpodName = await this.page.evaluate(() => {
             const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title');
@@ -70,5 +86,17 @@ exports.WorkpodPage = class WorkpodPage {
         await this.deleteOption.click()
         await this.enterWorkpodNameAndDelete(workpodName.trim());
         await expect(this.alertDialog).toContainText('Workpod deleted.')
+    }
+
+    generateString(length=12) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+        let result = '';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        return result;
     }
 };
