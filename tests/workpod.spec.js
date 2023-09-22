@@ -29,7 +29,7 @@ test('Validate that user is able to create the workpod and save it to draft.', a
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
-    await page.waitForTimeout(5000)
+    await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
@@ -57,11 +57,11 @@ test('Go to Drafts section and delete any existing Draft.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page) 
 
-    await page.waitForTimeout(5000)
+    await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.draftsSection.click()
 
-    await page.waitForTimeout(5000)
+    await workpodPage.firstWorkpodName.waitFor();
     await workpodPage.deleteFirstWorkpod();
     await expect.soft(workpodPage.alertDialog).toContainText('Workpod deleted.')
 })
@@ -70,7 +70,7 @@ test('Validate that user is able to create the workpod and publish it', async ()
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
-    await page.waitForTimeout(5000)
+    await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
@@ -99,11 +99,11 @@ test('Go to published tab and delete any workpod', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
-    await page.waitForTimeout(5000)
+    await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.publishedSection.click()
 
-    await page.waitForTimeout(5000)
+    await workpodPage.firstWorkpodName.waitFor();
     await workpodPage.deleteFirstWorkpod();
     await expect.soft(workpodPage.alertDialog).toContainText('Workpod deleted.')
 })
@@ -112,7 +112,7 @@ test('Go to Draft workpod, Edit it but dont save it, just discard at the end', a
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
-    await page.waitForTimeout(5000)
+    await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.draftsSection.click()
     await workpodPage.actionButton.click()
@@ -142,7 +142,7 @@ test('Validate that user is able to edit the workpod and publish it', async () =
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
-    await page.waitForTimeout(5000)
+    await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.draftsSection.click()
     await workpodPage.actionButton.click()
@@ -158,7 +158,7 @@ test('Validate that user is able to edit the workpod and publish it', async () =
     await workpodPage.groupAndUsers.click()
     await workpodPage.addButtonInDraft.click({ force: true })
     await workpodPage.clickOnCheckBoxByText('AAD DC Administrators')
-    await workpodPage.clickOnCheckBoxByText('A Group With Lots of Spaces')
+    await workpodPage.clickOnCheckBoxByText('Automation Group 01')
 
     await workpodPage.userTab.click()
     await workpodPage.clickOnCheckBoxByText('Billing-Test-1')
@@ -174,7 +174,7 @@ test('Go to Published Workpod section and Edit any published workpod and then Sa
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
-    await page.waitForTimeout(5000)
+    await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.publishedSection.click()
     await workpodPage.actionButton.click()

@@ -2,5 +2,7 @@
     "name": "Automation workpod name",
     "description": "Automated description",
     "updatedName": "Automation Edited",
-    "updatedDescription": "Automated Description Edited"
+    "updatedDescription": "Automated Description Edited",
+    "string_160": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc",
+    "randomLongString": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghcvghsdvcgvshgdvc"
 }

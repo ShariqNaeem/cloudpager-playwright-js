@@ -34,6 +34,7 @@ exports.WorkpodPage = class WorkpodPage {
         this.deleteBtnInModal = page.locator('#confirm-btn')
         this.firstWorkpodName = page.locator('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title')
         this.discardDraft = page.locator('#delete-wb-btn')
+        this.roleAlert = page.locator('[role="alert"]')
     }
 
     async clickOnCheckBox(index) {
@@ -50,18 +51,18 @@ exports.WorkpodPage = class WorkpodPage {
 
     async setNameAndDescription(name, description) {
         await this.workpodName.clear()
-        await this.workpodName.type(name)
+        await this.workpodName.fill(name)
         await this.workpodDescription.clear()
-        await this.workpodDescription.type(description)
+        await this.workpodDescription.fill(description)
     }
 
     async enterPublishComment(comment) {
-        await this.publishCommentField.type(comment)
+        await this.publishCommentField.fill(comment)
         await this.publishBtnModal.click()
     }
 
     async enterWorkpodNameAndDelete(name) {
-        await this.confirmWorkpodNameField.type(name)
+        await this.confirmWorkpodNameField.fill(name)
         await this.deleteBtnInModal.click()
     }
 
@@ -75,6 +76,7 @@ exports.WorkpodPage = class WorkpodPage {
     }
 
     async deleteFirstWorkpod() {
+        //await this.page.waitForTimeout(2000)
         const workpodName = await this.page.evaluate(() => {
             const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title');
             const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge');
@@ -85,10 +87,9 @@ exports.WorkpodPage = class WorkpodPage {
         await this.actionButton.click()
         await this.deleteOption.click()
         await this.enterWorkpodNameAndDelete(workpodName.trim());
-        await expect(this.alertDialog).toContainText('Workpod deleted.')
     }
 
-    generateString(length=12) {
+    generateString(length = 12) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
         let result = '';
@@ -98,5 +99,20 @@ exports.WorkpodPage = class WorkpodPage {
         }
 
         return result;
+    }
+
+    async checkAllCheckboxes(length=null) {
+        await this.page.waitForTimeout(3000)
+        const checkboxes = await this.page.$$('tbody tr td:nth-child(1) span.mat-checkbox-inner-container');
+        let checkboxesCount = checkboxes.length;
+
+        if (length === null) {
+            length = checkboxesCount;
+          }
+
+        for (let i = 0; i < length; i++) {
+            await checkboxes[i].click();
+            await this.page.waitForTimeout(500)
+        }
     }
 };
