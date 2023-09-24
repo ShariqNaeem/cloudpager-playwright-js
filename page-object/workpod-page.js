@@ -45,8 +45,8 @@ exports.WorkpodPage = class WorkpodPage {
 
     async clickOnCheckBoxByText(name) {
         const checkbox = this.page.locator(`//div[@class="dialog-content"]//td[contains(text(),"${name}")]`)
-        await checkbox.click()
-        //expect(await checkbox.isChecked()).toBeTruthy()
+        await checkbox.first().click()
+        //await expect(checkbox).toBeTruthy()
     }
 
     async setNameAndDescription(name, description) {
@@ -113,6 +113,13 @@ exports.WorkpodPage = class WorkpodPage {
         for (let i = 0; i < length; i++) {
             await checkboxes[i].click();
             await this.page.waitForTimeout(500)
+        }
+    }
+
+    async checkAllCheckboxesFromJson(namesArray){
+        for (let i = 0; i < namesArray.length; i++) {
+            await this.clickOnCheckBoxByText(namesArray[i])
+            await this.page.waitForTimeout(200)
         }
     }
 };
