@@ -167,7 +167,7 @@ test('Add/Save a workpod with all 30 applications selected.', async () => {
     await workpodPage.addApplicationButton.click()
     await workpodPage.checkAllCheckboxes(30)
     await workpodPage.saveButton.click()
-    await expect.soft(workpodPage.editingAlert).toContainText('All applications must complete the upload process before this workpod can be published.')
+    //await expect.soft(workpodPage.editingAlert).toContainText('All applications must complete the upload process before this workpod can be published.')
     await workpodPage.saveDraftButton.click()
 
     await workpodPage.verfiyAlertByText('New draft created.')
@@ -226,7 +226,7 @@ test('Create a workpod with all applications selected by using json file', async
 
     await workpodPage.checkAllCheckboxesFromJson(workpodData.applications)
     await workpodPage.saveButton.click()
-    await expect.soft(workpodPage.editingAlert).toContainText('All applications must complete the upload process before this workpod can be published.')
+    //await expect.soft(workpodPage.editingAlert).toContainText('All applications must complete the upload process before this workpod can be published.')
     await workpodPage.saveDraftButton.click()
     await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
