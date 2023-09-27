@@ -33,6 +33,7 @@ test.afterEach(async () => {
 
         await workpodPage.firstWorkpodName.waitFor();
         await workpodPage.deleteFirstWorkpod();
+        await workpodPage.verfiyAlertByText('Workpod deleted.')
     }
 })
 
@@ -98,6 +99,7 @@ test('Add/Save a workpod with 160 characters (Max limit) in name and description
 
     await workpodPage.setNameAndDescription(workpodData.string_160, workpodData.string_160)
     await workpodPage.saveDraftButton.click()
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -131,7 +133,7 @@ test('Add/Save a workpod with only 3 special characters in name and description.
     await workpodPage.workpodDescription.fill('$#@', { delay: 100 });
     await workpodPage.saveDraftButton.click();
 
-    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -147,7 +149,7 @@ test('Add/Save a workpod with only 3 numbers in name and description.', async ()
     await workpodPage.workpodDescription.fill('123', { delay: 100 });
     await workpodPage.saveDraftButton.click();
 
-    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -158,17 +160,17 @@ test('Add/Save a workpod with all 30 applications selected.', async () => {
 
     await dashboardPage.workpodSideNav.waitFor()
     await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
     await workpodPage.addApplicationButton.click()
-
     await workpodPage.checkAllCheckboxes(30)
     await workpodPage.saveButton.click()
-    await workpodPage.saveDraftButton.click();
+    await expect.soft(workpodPage.editingAlert).toContainText('All applications must complete the upload process before this workpod can be published.')
+    await workpodPage.saveDraftButton.click()
 
-    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -186,7 +188,7 @@ test('Add/Save a workpod with all 30 groups selected in it.', async () => {
     await workpodPage.checkAllCheckboxes(30)
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click();
-    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -206,6 +208,7 @@ test('Add/Save a workpod with all 30 users selected in it.', async () => {
     await workpodPage.checkAllCheckboxes(30)
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click();
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -223,8 +226,9 @@ test('Create a workpod with all applications selected by using json file', async
 
     await workpodPage.checkAllCheckboxesFromJson(workpodData.applications)
     await workpodPage.saveButton.click()
-    await workpodPage.saveDraftButton.click();
-    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
+    await expect.soft(workpodPage.editingAlert).toContainText('All applications must complete the upload process before this workpod can be published.')
+    await workpodPage.saveDraftButton.click()
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -244,6 +248,7 @@ test('Create a workpod with all 100 users selected in it', async () => {
     await workpodPage.checkAllCheckboxesFromJson(workpodData.users)
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click();
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -263,7 +268,7 @@ test('Create a workpod with all 100 groups selected in it', async () => {
     await workpodPage.checkAllCheckboxesFromJson(workpodData.groups)
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click();
-    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -279,6 +284,7 @@ test('Create a workpod with Name and Description in french language', async () =
 
     await workpodPage.setNameAndDescription(workpodData.frenchName, workpodData.frenchDescription)
     await workpodPage.saveDraftButton.click()
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -292,8 +298,9 @@ test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 u
     await workpodPage.addWorkpod.click()
     await page.waitForSelector('#wb-name-input')
 
-    await workpodPage.setNameAndDescription(workpodData.frenchName, workpodData.frenchDescription)
+    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
     await workpodPage.saveDraftButton.click()
+    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 
     await dashboardPage.workpodSideNav.waitFor();
@@ -305,5 +312,5 @@ test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 u
 
     await workpodPage.setNameAndDescription(workpodData.updatedName, workpodData.updatedDescription)
     await workpodPage.saveDraftButton.click()
-    await expect.soft(workpodPage.alertDialog).toContainText('have been saved to your drafts.')
+    await workpodPage.verfiyAlertByText('have been saved to your drafts.')
 })

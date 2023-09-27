@@ -122,4 +122,9 @@ exports.WorkpodPage = class WorkpodPage {
             await this.page.waitForTimeout(200)
         }
     }
+
+    async verfiyAlertByText(text){
+        const alert = await this.page.locator(`//*[@role="alertdialog" and contains(text(), "${text}")]`)
+        await expect.soft(alert).toBeVisible()
+    }
 };
