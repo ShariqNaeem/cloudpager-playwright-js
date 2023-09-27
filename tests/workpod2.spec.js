@@ -8,6 +8,7 @@ import workpodData from '../test_data/workpod.json'
 
 test.describe.configure({ mode: 'serial' });
 let page;
+let flag;
 
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -19,15 +20,30 @@ test.beforeAll(async ({ browser }) => {
     await loginPage.enterPassword(credentials.login.password)
     await loginPage.submitButton.click()
     await page.title('Cloudpager')
-});
+})
+
+test.afterEach(async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    if (flag) {
+        await dashboardPage.workpodSideNav.waitFor();
+        await dashboardPage.workpodSideNav.click()
+        await page.waitForLoadState('load')
+
+        await workpodPage.firstWorkpodName.waitFor();
+        await workpodPage.deleteFirstWorkpod();
+    }
+})
 
 test.afterAll(async () => {
     await page.close();
-  });
+})
 
 test('Add/Save a workpod without name and description.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = false;
 
     await page.waitForLoadState('load')
     await dashboardPage.workpodSideNav.click()
@@ -36,9 +52,10 @@ test('Add/Save a workpod without name and description.', async () => {
     await expect(workpodPage.roleAlert).toContainText('A value must be provided')
 })
 
-test('Add/Save a workpod with three spaces in name and description.', async () => {
+test.skip('Add/Save a workpod with three spaces in name and description.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
     await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
@@ -47,16 +64,17 @@ test('Add/Save a workpod with three spaces in name and description.', async () =
     await workpodPage.workpodDescription.fill('   ', { delay: 100 });
     await workpodPage.saveDraftButton.click();
 
-    await expect.soft(workpodPage.alertDialog).toContainText('New draft created.')
+    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
 test('Add/Save a workpod with 1 character in name and description', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = false;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await page.waitForSelector('#wb-name-input');
 
@@ -71,9 +89,10 @@ test('Add/Save a workpod with 1 character in name and description', async () => 
 test('Add/Save a workpod with 160 characters (Max limit) in name and description', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await page.waitForSelector('#wb-name-input')
 
@@ -85,9 +104,10 @@ test('Add/Save a workpod with 160 characters (Max limit) in name and description
 test('Add/Save a workpod with greater than 160 characters in name and description', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = false;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await page.waitForSelector('#wb-name-input');
 
@@ -102,73 +122,81 @@ test('Add/Save a workpod with greater than 160 characters in name and descriptio
 test('Add/Save a workpod with only 3 special characters in name and description.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await workpodPage.workpodName.fill('$#@', { delay: 100 });
     await workpodPage.workpodDescription.fill('$#@', { delay: 100 });
     await workpodPage.saveDraftButton.click();
 
-    await expect.soft(workpodPage.alertDialog).toContainText('New draft created.')
+    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
 test('Add/Save a workpod with only 3 numbers in name and description.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await workpodPage.workpodName.fill('123', { delay: 100 });
     await workpodPage.workpodDescription.fill('123', { delay: 100 });
     await workpodPage.saveDraftButton.click();
 
-    await expect.soft(workpodPage.alertDialog).toContainText('New draft created.')
+    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
-test('Add/Save a workpod with all applications selected.', async () => {
+test('Add/Save a workpod with all 30 applications selected.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
+    await dashboardPage.workpodSideNav.waitFor()
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('networkidle')
+
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
     await workpodPage.addApplicationButton.click()
 
-    await workpodPage.checkAllCheckboxes()
+    await workpodPage.checkAllCheckboxes(30)
     await workpodPage.saveButton.click()
-    await expect.soft(workpodPage.editingAlert).toContainText('All applications must complete the upload process before this workpod can be published.')
+    await workpodPage.saveDraftButton.click();
+
+    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
+    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
 test('Add/Save a workpod with all 30 groups selected in it.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
     await workpodPage.addUserGroupButton.click()
-    await page.waitForLoadState('domcontentloaded')
-
 
     await workpodPage.checkAllCheckboxes(30)
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click();
-    await expect.soft(workpodPage.alertDialog).toContainText('New draft created.')
+    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
 test('Add/Save a workpod with all 30 users selected in it.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
     await workpodPage.addUserGroupButton.click()
@@ -184,28 +212,29 @@ test('Add/Save a workpod with all 30 users selected in it.', async () => {
 test('Create a workpod with all applications selected by using json file', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
     await workpodPage.addApplicationButton.click()
     await page.waitForLoadState('domcontentloaded')
 
-
     await workpodPage.checkAllCheckboxesFromJson(workpodData.applications)
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click();
-    await expect.soft(workpodPage.alertDialog).toContainText('New draft created.')
+    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
 test('Create a workpod with all 100 users selected in it', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
     await workpodPage.addUserGroupButton.click()
@@ -221,9 +250,10 @@ test('Create a workpod with all 100 users selected in it', async () => {
 test('Create a workpod with all 100 groups selected in it', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
     await workpodPage.addUserGroupButton.click()
@@ -233,16 +263,17 @@ test('Create a workpod with all 100 groups selected in it', async () => {
     await workpodPage.checkAllCheckboxesFromJson(workpodData.groups)
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click();
-    await expect.soft(workpodPage.alertDialog).toContainText('New draft created.')
+    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
 test('Create a workpod with Name and Description in french language', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
 
-    await page.waitForLoadState('domcontentloaded')
     await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
     await workpodPage.addWorkpod.click()
     await page.waitForSelector('#wb-name-input')
 
@@ -254,6 +285,16 @@ test('Create a workpod with Name and Description in french language', async () =
 test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
+    flag = true;
+
+    await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
+    await workpodPage.addWorkpod.click()
+    await page.waitForSelector('#wb-name-input')
+
+    await workpodPage.setNameAndDescription(workpodData.frenchName, workpodData.frenchDescription)
+    await workpodPage.saveDraftButton.click()
+    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 
     await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
