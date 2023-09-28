@@ -49,6 +49,20 @@ exports.WorkpodPage = class WorkpodPage {
         //await expect(checkbox).toBeTruthy()
     }
 
+    async scrollInToModal(name) {
+        const requiredElementSelector = `//div[@class="dialog-content"]//td[contains(text()," ${name} ")]`
+        let isElementVisible = false
+        let index = 1
+        await this.page.waitForTimeout(3000)
+        while (!isElementVisible && index < 300) {
+            isElementVisible = await this.page.isVisible(requiredElementSelector)
+            const checkbox = this.page.locator(`tbody tr:nth-child(${index}) td:nth-child(1) span.mat-checkbox-inner-container`)
+            await checkbox.scrollIntoViewIfNeeded();
+            index += 10
+            await this.page.waitForTimeout(1000)
+        }
+    }
+
     async setNameAndDescription(name, description) {
         await this.workpodName.clear()
         await this.workpodName.fill(name)
@@ -101,14 +115,14 @@ exports.WorkpodPage = class WorkpodPage {
         return result;
     }
 
-    async checkAllCheckboxes(length=null) {
+    async checkAllCheckboxes(length = null) {
         await this.page.waitForTimeout(3000)
         const checkboxes = await this.page.$$('tbody tr td:nth-child(1) span.mat-checkbox-inner-container');
         let checkboxesCount = checkboxes.length;
 
         if (length === null) {
             length = checkboxesCount;
-          }
+        }
 
         for (let i = 0; i < length; i++) {
             await checkboxes[i].click();
@@ -116,14 +130,14 @@ exports.WorkpodPage = class WorkpodPage {
         }
     }
 
-    async checkAllCheckboxesFromJson(namesArray){
+    async checkAllCheckboxesFromJson(namesArray) {
         for (let i = 0; i < namesArray.length; i++) {
             await this.clickOnCheckBoxByText(namesArray[i])
             await this.page.waitForTimeout(200)
         }
     }
 
-    async verfiyAlertByText(text){
+    async verfiyAlertByText(text) {
         const alert = await this.page.locator(`//*[@role="alertdialog" and contains(text(), "${text}")]`)
         await expect.soft(alert).toBeVisible()
     }
