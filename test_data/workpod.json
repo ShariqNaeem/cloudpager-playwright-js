@@ -261,5 +261,27 @@
         "load.test23",
         "load.test24",
         "load.test25"
+    ],
+    "workpods":[
+        {
+            "testName": "French name and description",
+            "name": "c'est mon module de travail de test",
+            "description": "Ceci est la description de mon test"
+        },
+        {
+            "testName": "160 characters (Max limit)",
+            "name": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc",
+            "description": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc"
+        },
+        {
+            "testName": "3 numbers",
+            "name": "123",
+            "description": "123"
+        },
+        {
+            "testName": "3 special characters",
+            "name": "$#@",
+            "description": "$#@"
+        }
     ]
 }

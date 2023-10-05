@@ -5,6 +5,7 @@ const { WorkpodPage } = require('../page-object/workpod-page')
 
 import credentials from '../test_data/credentials.json'
 import workpodData from '../test_data/workpod.json'
+const records = workpodData.workpods
 
 test.describe.configure({ mode: 'serial' });
 let page;
@@ -87,22 +88,6 @@ test('Add/Save a workpod with 1 character in name and description', async () => 
     await expect(workpodPage.roleAlert).toContainText('Value must be at least 3 characters')
 })
 
-test('Add/Save a workpod with 160 characters (Max limit) in name and description', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await page.waitForSelector('#wb-name-input')
-
-    await workpodPage.setNameAndDescription(workpodData.string_160, workpodData.string_160)
-    await workpodPage.saveDraftButton.click()
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
 test('Add/Save a workpod with greater than 160 characters in name and description', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -119,38 +104,6 @@ test('Add/Save a workpod with greater than 160 characters in name and descriptio
     await workpodPage.workpodDescription.clear();
     await workpodPage.workpodName.fill(workpodData.randomLongString);
     await expect(workpodPage.roleAlert).toContainText('Value must be at less than 160 characters')
-})
-
-test('Add/Save a workpod with only 3 special characters in name and description.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await workpodPage.workpodName.fill('$#@', { delay: 100 });
-    await workpodPage.workpodDescription.fill('$#@', { delay: 100 });
-    await workpodPage.saveDraftButton.click();
-
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
-test('Add/Save a workpod with only 3 numbers in name and description.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await workpodPage.workpodName.fill('123', { delay: 100 });
-    await workpodPage.workpodDescription.fill('123', { delay: 100 });
-    await workpodPage.saveDraftButton.click();
-
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
 test('Add/Save a workpod with all 30 applications selected.', async () => {
@@ -272,22 +225,6 @@ test('Create a workpod with all 100 groups selected in it', async () => {
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
-test('Create a workpod with Name and Description in french language', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await page.waitForSelector('#wb-name-input')
-
-    await workpodPage.setNameAndDescription(workpodData.frenchName, workpodData.frenchDescription)
-    await workpodPage.saveDraftButton.click()
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
 test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -314,3 +251,21 @@ test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 u
     await workpodPage.saveDraftButton.click()
     await workpodPage.verfiyAlertByText('have been saved to your drafts.')
 })
+
+for (const record of records) {
+    test(`Add/Save a workpod with Name and Description for testcase: ${record.testName}`, async () => {
+        const dashboardPage = new DashboardPage(page)
+        const workpodPage = new WorkpodPage(page)
+        flag = true;
+
+        await dashboardPage.workpodSideNav.click()
+        await page.waitForLoadState('domcontentloaded')
+        await workpodPage.addWorkpod.click()
+        await page.waitForSelector('#wb-name-input')
+
+        await workpodPage.setNameAndDescription(record.name, record.description)
+        await workpodPage.saveDraftButton.click()
+        await workpodPage.verfiyAlertByText('New draft created.')
+        await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
+    })
+}
