@@ -77,7 +77,6 @@ exports.WorkpodPage = class WorkpodPage {
     }
 
     async deleteFirstWorkpod() {
-        //await this.page.waitForTimeout(2000)
         const workpodName = await this.page.evaluate(() => {
             const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title');
             const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge');
@@ -103,7 +102,7 @@ exports.WorkpodPage = class WorkpodPage {
     }
 
     async checkAllCheckboxes(length = null) {
-        await this.page.waitForTimeout(3000)
+        await this.page.waitForSelector('tbody tr:nth-child(1) td:nth-child(1) span.mat-checkbox-inner-container')
         const checkboxes = await this.page.$$('tbody tr td:nth-child(1) span.mat-checkbox-inner-container');
         let checkboxesCount = checkboxes.length;
 
@@ -113,14 +112,12 @@ exports.WorkpodPage = class WorkpodPage {
 
         for (let i = 0; i < length; i++) {
             await checkboxes[i].click();
-            await this.page.waitForTimeout(500)
         }
     }
 
     async checkAllCheckboxesFromJson(namesArray) {
         for (let i = 0; i < namesArray.length; i++) {
             await this.clickOnCheckBoxByText(namesArray[i])
-            await this.page.waitForTimeout(200)
         }
     }
 
