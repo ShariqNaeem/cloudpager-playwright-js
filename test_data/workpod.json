@@ -262,24 +262,24 @@
         "load.test24",
         "load.test25"
     ],
-    "workpods":[
+    "createValidWorkpods":[
         {
-            "testName": "French name and description",
+            "testName": "Add/Save a workpod with French name and description",
             "name": "c'est mon module de travail de test",
             "description": "Ceci est la description de mon test"
         },
         {
-            "testName": "160 characters (Max limit)",
+            "testName": "Add/Save a workpod with 160 characters (Max limit) in name and description",
             "name": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc",
             "description": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc"
         },
         {
-            "testName": "3 numbers",
+            "testName": "Add/Save a workpod with 3 numbers in name and description",
             "name": "123",
             "description": "123"
         },
         {
-            "testName": "3 special characters",
+            "testName": "Add/Save a workpod with 3 special characters in name and description",
             "name": "$#@",
             "description": "$#@"
         }

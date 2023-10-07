@@ -5,7 +5,6 @@ const { WorkpodPage } = require('../page-object/workpod-page')
 
 import credentials from '../test_data/credentials.json'
 import workpodData from '../test_data/workpod.json'
-const records = workpodData.workpods
 
 test.describe.configure({ mode: 'serial' });
 let page;
@@ -226,8 +225,8 @@ test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 u
     await workpodPage.verfiyAlertByText('have been saved to your drafts.')
 })
 
-for (const record of records) {
-    test(`Add/Save a workpod with Name and Description for testcase: ${record.testName}`, async () => {
+for (const record of workpodData.createValidWorkpods) {
+    test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
         flag = true;
@@ -239,7 +238,7 @@ for (const record of records) {
 
         await workpodPage.setNameAndDescription(record.name, record.description)
         await workpodPage.saveDraftButton.click()
-        await workpodPage.verfiyAlertByText('New draft created.')
-        await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
+        await workpodPage.verfiyAlertByText(workpodData.validationMessages.newDraftAlertMessage)
+        await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
     })
 }
