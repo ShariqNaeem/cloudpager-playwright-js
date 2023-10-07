@@ -35,6 +35,7 @@ exports.WorkpodPage = class WorkpodPage {
         this.firstWorkpodName = page.locator('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title')
         this.discardDraft = page.locator('#delete-wb-btn')
         this.roleAlert = page.locator('[role="alert"]')
+        this.searchInModal = page.locator('[role="dialog"] .mat-form-field-infix input')
     }
 
     async clickOnCheckBox(index) {
@@ -47,20 +48,6 @@ exports.WorkpodPage = class WorkpodPage {
         const checkbox = this.page.locator(`//div[@class="dialog-content"]//td[contains(text(),"${name}")]`)
         await checkbox.first().click()
         //await expect(checkbox).toBeTruthy()
-    }
-
-    async scrollInToModal(name) {
-        const requiredElementSelector = `//div[@class="dialog-content"]//td[contains(text()," ${name} ")]`
-        let isElementVisible = false
-        let index = 1
-        await this.page.waitForTimeout(3000)
-        while (!isElementVisible && index < 300) {
-            isElementVisible = await this.page.isVisible(requiredElementSelector)
-            const checkbox = this.page.locator(`tbody tr:nth-child(${index}) td:nth-child(1) span.mat-checkbox-inner-container`)
-            await checkbox.scrollIntoViewIfNeeded();
-            index += 10
-            await this.page.waitForTimeout(1000)
-        }
     }
 
     async setNameAndDescription(name, description) {

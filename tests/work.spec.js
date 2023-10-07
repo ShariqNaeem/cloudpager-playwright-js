@@ -46,13 +46,16 @@ test('Validate that user is able to create the workpod and publish it', async ()
 
     await workpodPage.userTab.click()
     
-    await workpodPage.scrollInToModal('UAT1')
+    await workpodPage.searchInModal.waitFor()
+    await workpodPage.searchInModal.fill('UAT1')
     await workpodPage.clickOnCheckBoxByText('UAT1')
+    await workpodPage.searchInModal.fill('UAT2')
     await workpodPage.clickOnCheckBoxByText('UAT2')
+
     await workpodPage.saveButton.click()
     await workpodPage.publishButton.click();
 
     await workpodPage.enterPublishComment('Automated comment...')
     await expect.soft(workpodPage.alertDialog).toContainText('New workpod published')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
+    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
