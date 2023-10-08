@@ -257,3 +257,37 @@ test('Switching between the filters, draft, publish, and all', async () => {
     await workpodPage.publishedSection.click()
     await expect(page).toHaveURL(/.*publish/)
 })
+
+test('Validate the change policy while user edit the workpod', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    await dashboardPage.workpodSideNav.waitFor()
+    await dashboardPage.workpodSideNav.click()
+    await workpodPage.addWorkpod.click()
+    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
+    await workpodPage.addApplicationButton.click()
+
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[1])
+    await workpodPage.saveButton.click()
+
+    await workpodPage.addUserGroupButton.click()
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
+
+    await workpodPage.userTab.click()
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
+    await workpodPage.saveButton.click()
+    await workpodPage.publishButton.click();
+
+    await workpodPage.enterPublishComment(workpodData.sampleWorkpod.comment)
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.newPublishAlertMessage)
+    await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
+
+    await dashboardPage.workpodSideNav.click()
+    await workpodPage.publishedSection.click()
+    await workpodPage.firstWorkpodCard.waitFor()
+    await workpodPage.firstWorkpodCard.click()
+    await workpodPage.editButton.click()
+    await workpodPage.actionButtonsInEdit.first().click()
+    await expect(workpodPage.changePolicyOption).toBeVisible()
+})

@@ -36,6 +36,10 @@ exports.WorkpodPage = class WorkpodPage {
         this.discardDraft = page.locator('#delete-wb-btn')
         this.roleAlert = page.locator('[role="alert"]')
         this.searchInModal = page.locator('[role="dialog"] .mat-form-field-infix input')
+        this.firstWorkpodCard = page.locator('div.drag-drop-list>div:first-child div.wb-card')
+        this.editButton = page.locator('button.view-edit-top-btn')
+        this.actionButtonsInEdit = page.locator('#app-table button.actions-button')
+        this.changePolicyOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Change Policy' })
     }
 
     async clickOnCheckBox(index) {
