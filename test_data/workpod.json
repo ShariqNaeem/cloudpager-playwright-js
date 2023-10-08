@@ -349,6 +349,7 @@
             "testName": "Add/Save a workpod without name and description.",
             "name": "",
             "description": "",
+            "isDelete": false,
             "nameErrorMsg": "A value must be provided",
             "descriptionErrorMsg": ""
         },
@@ -356,6 +357,7 @@
             "testName": "Add/Save a workpod with 1 character in name and description",
             "name": "@",
             "description": "$",
+            "isDelete": false,
             "nameErrorMsg": "Value must be at least 3 characters",
             "descriptionErrorMsg": "Value must be at least 3 characters"
         },
@@ -363,6 +365,7 @@
             "testName": "Add/Save a workpod with greater than 160 characters in name and description",
             "name": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghcvghsdvcgvshgdvc",
             "description": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghcvghsdvcgvshgdvc",
+            "isDelete": false,
             "nameErrorMsg": "Value must be at less than 160 characters",
             "descriptionErrorMsg": "Value must be at less than 160 characters"
         }
