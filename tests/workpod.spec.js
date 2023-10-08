@@ -132,6 +132,7 @@ test('Go to Published Workpod section and Edit any published workpod and then Sa
     await workpodPage.saveDraftButton.click()
     await expect.soft(workpodPage.alertDialog).toContainText('have been saved to your drafts.')
 })
+
 test('Go to Draft workpod, Edit it but dont save it, just discard at the end', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -162,6 +163,7 @@ test('Go to Draft workpod, Edit it but dont save it, just discard at the end', a
     await expect.soft(workpodPage.alertDialog).toContainText('has been removed from your drafts.')
 
 })
+
 test('Go to Published Workpod section and Edit any published workpod and then Saved it', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -195,6 +197,7 @@ test('Go to Published Workpod section and Edit any published workpod and then Sa
     await workpodPage.saveDraftButton.click()
     await expect.soft(workpodPage.alertDialog).toContainText('have been saved to your drafts.')
 })
+
 test('Validate that user is able to edit the workpod and publish it', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -227,6 +230,7 @@ test('Validate that user is able to edit the workpod and publish it', async () =
     await expect.soft(workpodPage.alertDialog).toContainText('have been published successfully.')
 
 })
+
 test('Go to published tab and delete any workpod', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -246,14 +250,11 @@ test('Switchhing between the filters, draft, publish, and all', async () => {
 
     await dashboardPage.workpodSideNav.waitFor()
     await dashboardPage.workpodSideNav.click()
-    await page.waitForTimeout(5000)
     await expect(page).toHaveURL(/.*all/)
 
     await workpodPage.draftsSection.click()
-    await page.waitForTimeout(5000)
     await expect(page).toHaveURL(/.*draft/)
 
     await workpodPage.publishedSection.click()
-    await page.waitForTimeout(5000)
     await expect(page).toHaveURL(/.*publish/)
 })
