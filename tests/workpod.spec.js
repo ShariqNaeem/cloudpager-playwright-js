@@ -32,25 +32,25 @@ test('Validate that user is able to create the workpod and save it to draft.', a
     await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
+    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
     await workpodPage.addApplicationButton.click()
 
-    await workpodPage.clickOnCheckBoxByText('1_appv_putty')
-    await workpodPage.clickOnCheckBoxByText('1_stp_babel')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[1])
     await workpodPage.saveButton.click()
 
     await workpodPage.addUserGroupButton.click()
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_1')
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_2')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText('Auto User 001')
-    await workpodPage.clickOnCheckBoxByText('Auto User002')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click();
 
-    await expect.soft(workpodPage.alertDialog).toContainText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.newDraftAlertMessage)
+    await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
 })
 
 test('Go to Drafts section and delete any existing Draft.', async () => {
@@ -62,9 +62,9 @@ test('Go to Drafts section and delete any existing Draft.', async () => {
     await workpodPage.draftsSection.click()
 
     await workpodPage.firstWorkpodName.waitFor();
-    await expect.soft(workpodPage.firstWorkpodName).toContainText(workpodData.name)
+    await expect.soft(workpodPage.firstWorkpodName).toContainText(workpodData.sampleWorkpod.name)
     await workpodPage.deleteFirstWorkpod();
-    await expect.soft(workpodPage.alertDialog).toContainText('Workpod deleted.')
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.deleteWorkpodMessage)
 })
 
 test('Validate that user is able to create the workpod and publish it', async () => {
@@ -74,26 +74,26 @@ test('Validate that user is able to create the workpod and publish it', async ()
     await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
+    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
     await workpodPage.addApplicationButton.click()
 
-    await workpodPage.clickOnCheckBoxByText('1_appv_putty')
-    await workpodPage.clickOnCheckBoxByText('1_stp_babel')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[1])
     await workpodPage.saveButton.click()
 
     await workpodPage.addUserGroupButton.click()
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_1')
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_2')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText('Auto User 001')
-    await workpodPage.clickOnCheckBoxByText('Auto User002')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
     await workpodPage.saveButton.click()
     await workpodPage.publishButton.click();
 
-    await workpodPage.enterPublishComment('Automated comment...')
-    await expect.soft(workpodPage.alertDialog).toContainText('New workpod published')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
+    await workpodPage.enterPublishComment(workpodData.sampleWorkpod.comment)
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.newPublishAlertMessage)
+    await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
 })
 
 test('Go to Published Workpod section and Edit any published workpod and then Saved it as a draft', async () => {
@@ -104,33 +104,33 @@ test('Go to Published Workpod section and Edit any published workpod and then Sa
     await dashboardPage.workpodSideNav.click()
     await workpodPage.publishedSection.click()
     await workpodPage.firstWorkpodName.waitFor();
-    await expect.soft(workpodPage.firstWorkpodName).toContainText(workpodData.name)
+    await expect.soft(workpodPage.firstWorkpodName).toContainText(workpodData.sampleWorkpod.name)
 
     await workpodPage.actionButton.click()
     await workpodPage.editOption.click()
     await workpodPage.editingAlert.isVisible()
 
     const randomName = workpodPage.generateString();
-    await workpodPage.setNameAndDescription(randomName, workpodData.updatedDescription)
+    await workpodPage.setNameAndDescription(randomName, workpodData.sampleWorkpod.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
 
-    await workpodPage.clickOnCheckBoxByText('FileZilla_PowerShell')
-    await workpodPage.clickOnCheckBoxByText('2_appv_InstEdit')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[2])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[3])
     await workpodPage.saveButton.click()
 
 
     await workpodPage.groupAndUsers.click()
     await workpodPage.addButtonInDraft.click({ force: true })
 
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_1')
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_2')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText('Auto User002')
-    await workpodPage.clickOnCheckBoxByText('Auto User003')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[2])
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click()
-    await expect.soft(workpodPage.alertDialog).toContainText('have been saved to your drafts.')
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.saveToDraftsMessage)
 })
 
 test('Go to Draft workpod, Edit it but dont save it, just discard at the end', async () => {
@@ -144,23 +144,23 @@ test('Go to Draft workpod, Edit it but dont save it, just discard at the end', a
     await workpodPage.editOption.click()
     await workpodPage.editingAlert.isVisible()
 
-    await workpodPage.setNameAndDescription(workpodData.updatedName, workpodData.updatedDescription)
+    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.updatedName, workpodData.sampleWorkpod.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
-    await workpodPage.clickOnCheckBoxByText('1_appv_putty')
-    await workpodPage.clickOnCheckBoxByText('2_stp_notepad++')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[4])
     await workpodPage.saveButton.click()
 
     await workpodPage.groupAndUsers.click()
     await workpodPage.addButtonInDraft.click({ force: true })
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_1')
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_2')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText('Auto User002')
-    await workpodPage.clickOnCheckBoxByText('Auto User003')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[2])
     await workpodPage.saveButton.click()
     await workpodPage.discardDraft.click()
-    await expect.soft(workpodPage.alertDialog).toContainText('has been removed from your drafts.')
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.removeFromDraftMessage)
 
 })
 
@@ -176,26 +176,25 @@ test('Go to Published Workpod section and Edit any published workpod and then Sa
     await workpodPage.editingAlert.isVisible()
 
     const randomName = workpodPage.generateString();
-    await workpodPage.setNameAndDescription(randomName, workpodData.updatedDescription)
+    await workpodPage.setNameAndDescription(randomName, workpodData.sampleWorkpod.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
 
-    await workpodPage.clickOnCheckBoxByText('FileZilla_PowerShell')
-    await workpodPage.clickOnCheckBoxByText('2_appv_InstEdit')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[2])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[3])
     await workpodPage.saveButton.click()
-
 
     await workpodPage.groupAndUsers.click()
     await workpodPage.addButtonInDraft.click({ force: true })
 
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_1')
-    await workpodPage.clickOnCheckBoxByText('1NGroupTest_2')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[2])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText('Auto User002')
-    await workpodPage.clickOnCheckBoxByText('Auto User003')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click()
-    await expect.soft(workpodPage.alertDialog).toContainText('have been saved to your drafts.')
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.saveToDraftsMessage)
 })
 
 test('Validate that user is able to edit the workpod and publish it', async () => {
@@ -209,25 +208,25 @@ test('Validate that user is able to edit the workpod and publish it', async () =
     await workpodPage.editOption.click()
     await workpodPage.editingAlert.isVisible()
 
-    await workpodPage.setNameAndDescription(workpodData.updatedName, workpodData.updatedDescription)
+    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.updatedName, workpodData.sampleWorkpod.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
-    await workpodPage.clickOnCheckBoxByText('2_stp_notepad++')
-    await workpodPage.clickOnCheckBoxByText('2_appv_InstEdit')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[4])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[3])
     await workpodPage.saveButton.click()
 
     await workpodPage.groupAndUsers.click()
     await workpodPage.addButtonInDraft.click({ force: true })
-    await workpodPage.clickOnCheckBoxByText('AAD DC Administrators')
-    await workpodPage.clickOnCheckBoxByText('Automation Group 01')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[2])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[3])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText('Billing-Test-1')
-    await workpodPage.clickOnCheckBoxByText('Auto User003')
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[2])
+    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[3])
     await workpodPage.saveButton.click()
     await workpodPage.publishButton.click()
 
-    await workpodPage.enterPublishComment('Automated comment...')
-    await expect.soft(workpodPage.alertDialog).toContainText('have been published successfully.')
+    await workpodPage.enterPublishComment(workpodData.sampleWorkpod.comment)
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
 
 })
 
@@ -241,10 +240,10 @@ test('Go to published tab and delete any workpod', async () => {
 
     await workpodPage.firstWorkpodName.waitFor();
     await workpodPage.deleteFirstWorkpod();
-    await expect.soft(workpodPage.alertDialog).toContainText('Workpod deleted.')
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.deleteWorkpodMessage)
 })
 
-test('Switchhing between the filters, draft, publish, and all', async () => {
+test('Switching between the filters, draft, publish, and all', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 

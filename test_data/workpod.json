@@ -342,7 +342,11 @@
     "validationMessages": {
         "workpodCreatedMessage": "Workpod Created",
         "newDraftAlertMessage": "New draft created.",
-        "saveToDraftsMessage": "have been saved to your drafts."
+        "newPublishAlertMessage": "New workpod published",
+        "saveToDraftsMessage": "have been saved to your drafts.",
+        "deleteWorkpodMessage": "Workpod deleted.",
+        "publishWorkpodMessage": "have been published successfully.",
+        "removeFromDraftMessage": "has been removed from your drafts."
     },
     "inputValidationsWorkpods": [
         {
@@ -369,5 +373,31 @@
             "nameErrorMsg": "Value must be at less than 160 characters",
             "descriptionErrorMsg": "Value must be at less than 160 characters"
         }
-    ]
+    ],
+    "sampleWorkpod": {
+        "name": "Automation workpod name",
+        "description": "Automated description",
+        "updatedName": "Automation Edited",
+        "updatedDescription": "Automated Description Edited",
+        "comment": "Automated comment...",
+        "applications": [
+            "1_appv_putty",
+            "1_stp_babel",
+            "FileZilla_PowerShell",
+            "2_appv_InstEdit",
+            "2_stp_notepad++"
+        ],
+        "groups": [
+            "1NGroupTest_1",
+            "1NGroupTest_2",
+            "AAD DC Administrators",
+            "Automation Group 01"
+        ],
+        "users": [
+            "Auto User 001",
+            "Auto User002",
+            "Auto User003",
+            "Billing-Test-1"
+        ]
+    }
 }
