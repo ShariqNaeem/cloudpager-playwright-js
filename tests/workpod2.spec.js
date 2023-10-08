@@ -80,7 +80,7 @@ test.skip('Add/Save a workpod with three spaces in name and description.', async
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
-test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
+test.only('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
     flag = true;
@@ -90,10 +90,10 @@ test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 u
     await workpodPage.addWorkpod.click()
     await page.waitForSelector('#wb-name-input')
 
-    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
+    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
     await workpodPage.saveDraftButton.click()
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
+    await workpodPage.verfiyAlertByText(workpodData.validationMessages.newDraftAlertMessage)
+    await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
 
     await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
@@ -102,9 +102,9 @@ test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 u
     await workpodPage.editOption.click()
     await workpodPage.editingAlert.isVisible()
 
-    await workpodPage.setNameAndDescription(workpodData.updatedName, workpodData.updatedDescription)
+    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.updatedDescription)
     await workpodPage.saveDraftButton.click()
-    await workpodPage.verfiyAlertByText('have been saved to your drafts.')
+    await workpodPage.verfiyAlertByText(workpodData.validationMessages.saveToDraftsMessage)
 })
 
 for (const record of workpodData.createValidWorkpods) {

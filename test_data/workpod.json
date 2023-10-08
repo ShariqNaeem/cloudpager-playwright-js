@@ -1,12 +1,4 @@
 {
-    "name": "Automation workpod name",
-    "description": "Automated description",
-    "frenchName": "c'est mon module de travail de test",
-    "frenchDescription": "Ceci est la description de mon test",
-    "updatedName": "Automation Edited",
-    "updatedDescription": "Automated Description Edited",
-    "string_160": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc",
-    "randomLongString": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghcvghsdvcgvshgdvc",
     "applications": [
         "1_appv_putty",
         "1_stp_babel",
@@ -385,7 +377,9 @@
             "1_stp_babel",
             "FileZilla_PowerShell",
             "2_appv_InstEdit",
-            "2_stp_notepad++"
+            "2_stp_notepad++",
+            "GSD_AppV_AdobeAcrobatReaderDC_1",
+            "Notepad++"
         ],
         "groups": [
             "1NGroupTest_1",
@@ -397,7 +391,9 @@
             "Auto User 001",
             "Auto User002",
             "Auto User003",
-            "Billing-Test-1"
+            "Billing-Test-1",
+            "UAT1",
+            "UAT2"
         ]
     }
 }
