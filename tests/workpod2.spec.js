@@ -80,7 +80,7 @@ test.skip('Add/Save a workpod with three spaces in name and description.', async
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
-test.only('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
+test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
     flag = true;
