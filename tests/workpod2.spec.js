@@ -63,6 +63,7 @@ for (const record of workpodData.inputValidationsWorkpods) {
     })
 }
 
+// We will cover this test case in the "createValidWorkpods".
 test.skip('Add/Save a workpod with three spaces in name and description.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
@@ -76,125 +77,6 @@ test.skip('Add/Save a workpod with three spaces in name and description.', async
     await workpodPage.saveDraftButton.click();
 
     await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
-test.skip('Add/Save a workpod with all 30 applications selected.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.waitFor()
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-
-    await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
-    await workpodPage.addApplicationButton.click()
-    await workpodPage.checkAllCheckboxes(30)
-    await workpodPage.saveButton.click()
-    //await expect.soft(workpodPage.editingAlert).toContainText('All applications must complete the upload process before this workpod can be published.')
-    await workpodPage.saveDraftButton.click()
-
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
-test.skip('Add/Save a workpod with all 30 groups selected in it.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
-    await workpodPage.addUserGroupButton.click()
-
-    await workpodPage.checkAllCheckboxes(30)
-    await workpodPage.saveButton.click()
-    await workpodPage.saveDraftButton.click();
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
-test.skip('Add/Save a workpod with all 30 users selected in it.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
-    await workpodPage.addUserGroupButton.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.userTab.click()
-
-    await workpodPage.checkAllCheckboxes(30)
-    await workpodPage.saveButton.click()
-    await workpodPage.saveDraftButton.click();
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
-test.skip('Create a workpod with all applications selected by using json file', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
-    await workpodPage.addApplicationButton.click()
-    await page.waitForLoadState('domcontentloaded')
-
-    await workpodPage.checkAllCheckboxesFromJson(workpodData.applications)
-    await workpodPage.saveButton.click()
-    //await expect.soft(workpodPage.editingAlert).toContainText('All applications must complete the upload process before this workpod can be published.')
-    await workpodPage.saveDraftButton.click()
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
-test.skip('Create a workpod with all 100 users selected in it', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
-    await workpodPage.addUserGroupButton.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.userTab.click()
-
-    await workpodPage.checkAllCheckboxesFromJson(workpodData.users)
-    await workpodPage.saveButton.click()
-    await workpodPage.saveDraftButton.click();
-    await workpodPage.verfiyAlertByText('New draft created.')
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
-test.skip('Create a workpod with all 100 groups selected in it', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.name, workpodData.description)
-    await workpodPage.addUserGroupButton.click()
-    await page.waitForLoadState('domcontentloaded')
-
-
-    await workpodPage.checkAllCheckboxesFromJson(workpodData.groups)
-    await workpodPage.saveButton.click()
-    await workpodPage.saveDraftButton.click();
-    await workpodPage.verfiyAlertByText('New draft created.')
     await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
 })
 
@@ -229,14 +111,36 @@ for (const record of workpodData.createValidWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
-        flag = true;
+        flag = record.isDelete;
 
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('domcontentloaded')
         await workpodPage.addWorkpod.click()
         await page.waitForSelector('#wb-name-input')
-
         await workpodPage.setNameAndDescription(record.name, record.description)
+
+        if (record.applications.length > 0) {
+            await workpodPage.addApplicationButton.click()
+            await page.waitForLoadState('domcontentloaded')
+            await workpodPage.checkAllCheckboxesFromJson(record.applications)
+            await workpodPage.saveButton.click()
+        }
+
+        if (record.groups.length > 0) {
+            await workpodPage.addUserGroupButton.click()
+            await page.waitForLoadState('domcontentloaded')
+            await workpodPage.checkAllCheckboxesFromJson(record.groups)
+            await workpodPage.saveButton.click()
+        }
+
+        if (record.users.length > 0) {
+            await workpodPage.addUserGroupButton.click()
+            await workpodPage.userTab.click()
+            await page.waitForLoadState('domcontentloaded')
+            await workpodPage.checkAllCheckboxesFromJson(record.users)
+            await workpodPage.saveButton.click()
+        }
+
         await workpodPage.saveDraftButton.click()
         await workpodPage.verfiyAlertByText(workpodData.validationMessages.newDraftAlertMessage)
         await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)

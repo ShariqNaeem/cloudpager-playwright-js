@@ -262,34 +262,89 @@
         "load.test24",
         "load.test25"
     ],
-    "createValidWorkpods":[
+    "createValidWorkpods": [
         {
             "testName": "Add/Save a workpod with French name and description",
             "name": "c'est mon module de travail de test",
-            "description": "Ceci est la description de mon test"
+            "description": "Ceci est la description de mon test",
+            "isDelete": true,
+            "applications": [],
+            "groups": [],
+            "users": []
         },
         {
             "testName": "Add/Save a workpod with 160 characters (Max limit) in name and description",
             "name": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc",
-            "description": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc"
+            "description": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc",
+            "isDelete": true,
+            "applications": [],
+            "groups": [],
+            "users": []
         },
         {
             "testName": "Add/Save a workpod with 3 numbers in name and description",
             "name": "123",
-            "description": "123"
+            "description": "123",
+            "isDelete": true,
+            "applications": [],
+            "groups": [],
+            "users": []
         },
         {
             "testName": "Add/Save a workpod with 3 special characters in name and description",
             "name": "$#@",
-            "description": "$#@"
+            "description": "$#@",
+            "isDelete": true,
+            "applications": [],
+            "groups": [],
+            "users": []
+        },
+        {
+            "testName": "Add/Save a workpod with all 30 applications selected.",
+            "name": "Automation workpod 30 applications",
+            "description": "Automation workpod with 30 applications",
+            "isDelete": true,
+            "applications": [
+                "1_appv_putty",
+                "1_stp_babel",
+                "2_stp_notepad++"
+            ],
+            "groups": [],
+            "users": []
+        },
+        {
+            "testName": "Add/Save a workpod with all 30 groups selected.",
+            "name": "Automation workpod 30 groups",
+            "description": "Automation workpod with 30 groups",
+            "isDelete": true,
+            "applications": [],
+            "groups": [
+                "1NGroupTest_1",
+                "1NGroupTest_2",
+                "Automation Group 01"
+            ],
+            "users": []
+        },
+        {
+            "testName": "Add/Save a workpod with all 30 users selected.",
+            "name": "Automation workpod 30 users",
+            "description": "Automation workpod with 30 users",
+            "isDelete": true,
+            "applications": [],
+            "groups": [],
+            "users": [
+                "Auto User 001",
+                "Auto User002",
+                "Auto User003"
+            ]
         }
     ],
-    "validationMessages":{
+    "validationMessages": {
         "workpodCreatedMessage": "Workpod Created",
         "newDraftAlertMessage": "New draft created.",
         "saveToDraftsMessage": "have been saved to your drafts."
     },
-    "inputValidationsWorkpods":[
+    "inputValidationsWorkpods": [
         {
             "testName": "Add/Save a workpod without name and description.",
             "name": "",
