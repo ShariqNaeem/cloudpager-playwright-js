@@ -32,6 +32,19 @@ exports.WorkpodPage = class WorkpodPage {
         this.publishBtnModal = page.locator('#publish-btn')
         this.confirmWorkpodNameField = page.locator('input[formcontrolname="confirmName"]')
         this.deleteBtnInModal = page.locator('#confirm-btn')
+        this.firstWorkpodName = page.locator('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title')
+        this.discardDraft = page.locator('#delete-wb-btn')
+        this.roleAlert = page.locator('[role="alert"]')
+        this.searchInModal = page.locator('[role="dialog"] .mat-form-field-infix input')
+        this.firstWorkpodCard = page.locator('div.drag-drop-list>div:first-child div.wb-card')
+        this.editButton = page.locator('button.view-edit-top-btn')
+        this.actionButtonsInEdit = page.locator('#app-table button.actions-button')
+        this.changePolicyOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Change Policy' })
+        this.viewRivisionBtn = page.locator('div.revision-btn')
+        this.revisionHistoryItems = page.locator('.revision-panel .revision-item')
+        this.copyAsNewDraft = page.locator('button span.mat-button-wrapper', { hasText: ' Copy as New Draft ' })
+        this.rollback = page.locator('button span.mat-button-wrapper', { hasText: ' Rollback ' })
+        this.rollbackWorkpod = page.locator('[role="dialog"] #confirm-btn')
     }
 
     async clickOnCheckBox(index) {
@@ -40,20 +53,85 @@ exports.WorkpodPage = class WorkpodPage {
         //expect(await checkbox.isChecked()).toBeTruthy()
     }
 
+    async clickOnCheckBoxByText(name) {
+        const checkbox = this.page.locator(`//div[@class="dialog-content"]//td[contains(text(),"${name}")]`)
+        await checkbox.first().click()
+        //await expect(checkbox).toBeTruthy()
+    }
+
     async setNameAndDescription(name, description) {
         await this.workpodName.clear()
-        await this.workpodName.type(name)
+        await this.workpodName.fill(name)
         await this.workpodDescription.clear()
-        await this.workpodDescription.type(description)
+        await this.workpodDescription.fill(description)
     }
 
     async enterPublishComment(comment) {
-        await this.publishCommentField.type(comment)
+        await this.publishCommentField.fill(comment)
         await this.publishBtnModal.click()
     }
 
     async enterWorkpodNameAndDelete(name) {
-        await this.confirmWorkpodNameField.type(name)
+        await this.confirmWorkpodNameField.fill(name)
         await this.deleteBtnInModal.click()
+    }
+
+    async firstWorkpodText() {
+        await this.page.evaluate(() => {
+            const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title');
+            const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge');
+            const parentText = parentElement.textContent.split(childElement.textContent);
+            return parentText[0];
+        });
+    }
+
+    async deleteFirstWorkpod() {
+        const workpodName = await this.page.evaluate(() => {
+            const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title');
+            const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge');
+            const parentText = parentElement.textContent.split(childElement.textContent);
+            return parentText[0];
+        });
+
+        await this.actionButton.click()
+        await this.deleteOption.click()
+        await this.enterWorkpodNameAndDelete(workpodName.trim());
+    }
+
+    generateString(length = 12) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+        let result = '';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        return result;
+    }
+
+    async checkAllCheckboxes(length = null) {
+        await this.page.waitForSelector('tbody tr:nth-child(1) td:nth-child(1) span.mat-checkbox-inner-container')
+        const checkboxes = await this.page.$$('tbody tr td:nth-child(1) span.mat-checkbox-inner-container');
+        let checkboxesCount = checkboxes.length;
+
+        if (length === null) {
+            length = checkboxesCount;
+        }
+
+        for (let i = 0; i < length; i++) {
+            await checkboxes[i].click();
+        }
+    }
+
+    async checkAllCheckboxesFromJson(namesArray) {
+        for (let i = 0; i < namesArray.length; i++) {
+            await this.clickOnCheckBoxByText(namesArray[i])
+        }
+    }
+
+    async verfiyAlertByText(text) {
+        const alert = await this.page.locator(`//*[@role="alertdialog" and contains(text(), "${text}")]`)
+        await expect.soft(alert).toBeVisible()
     }
 };
