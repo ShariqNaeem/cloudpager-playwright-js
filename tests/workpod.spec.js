@@ -9,6 +9,10 @@ import workpodData from '../test_data/workpod.json'
 test.describe.configure({ mode: 'serial' });
 let page;
 
+test.use({
+    viewport: { width: 1500, height: 900 },
+  });
+
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     const loginPage = new LoginPage(page)
@@ -290,4 +294,90 @@ test('Validate the change policy while user edit the workpod', async () => {
     await workpodPage.editButton.click()
     await workpodPage.actionButtonsInEdit.first().click()
     await expect(workpodPage.changePolicyOption).toBeVisible()
+})
+
+test('Go to published workpods and user is able to see the view revision option', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    await page.reload();
+    await dashboardPage.workpodSideNav.waitFor()
+    await dashboardPage.workpodSideNav.click()
+    await workpodPage.publishedSection.click()
+    await workpodPage.firstWorkpodCard.waitFor()
+    await workpodPage.firstWorkpodCard.click()
+    await expect(workpodPage.viewRivisionBtn).toBeVisible()
+})
+
+test('Verify that user is able to see the revisions history section after 4 times edit the workpod', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    await dashboardPage.workpodSideNav.waitFor()
+    await dashboardPage.workpodSideNav.click()
+    await workpodPage.publishedSection.click()
+    await workpodPage.firstWorkpodCard.waitFor()
+    await workpodPage.firstWorkpodCard.click()
+    await expect(workpodPage.viewRivisionBtn).toBeVisible()
+
+    for (let index = 0; index < 4; index++) {
+        await workpodPage.editButton.waitFor()
+        await workpodPage.editButton.click()
+        const randomDescription = workpodPage.generateString()
+        await workpodPage.workpodDescription.fill(randomDescription)
+        await workpodPage.publishButton.click()
+        await workpodPage.enterPublishComment(workpodData.sampleWorkpod.comment)
+        await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
+    }
+
+    await workpodPage.editButton.waitFor()
+    await workpodPage.viewRivisionBtn.waitFor()
+    await workpodPage.viewRivisionBtn.click()
+    await workpodPage.revisionHistoryItems.first().waitFor()
+    await expect(workpodPage.revisionHistoryItems.first()).toBeVisible();
+})
+
+test('Validate the user is perform the copy as new draft on revisions', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    await dashboardPage.workpodSideNav.waitFor()
+    await dashboardPage.workpodSideNav.click()
+    await workpodPage.publishedSection.click()
+    await workpodPage.firstWorkpodCard.waitFor()
+    await workpodPage.firstWorkpodCard.click()
+        
+    await workpodPage.editButton.waitFor()
+    await workpodPage.editButton.click()
+    await workpodPage.viewRivisionBtn.waitFor()
+    await workpodPage.viewRivisionBtn.click()
+    await workpodPage.revisionHistoryItems.first().waitFor()
+    await expect(workpodPage.revisionHistoryItems.first()).toBeVisible();
+
+    await workpodPage.revisionHistoryItems.last().click()
+    await workpodPage.copyAsNewDraft.click()
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.saveToDraftsMessage)
+})
+
+test('Validate the user is perform the rollback on revisions', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    await dashboardPage.workpodSideNav.waitFor()
+    await dashboardPage.workpodSideNav.click()
+    await workpodPage.publishedSection.click()
+    await workpodPage.firstWorkpodCard.waitFor()
+    await workpodPage.firstWorkpodCard.click()
+        
+    await workpodPage.editButton.waitFor()
+    await workpodPage.editButton.click()
+    await workpodPage.viewRivisionBtn.waitFor()
+    await workpodPage.viewRivisionBtn.click()
+    await workpodPage.revisionHistoryItems.first().waitFor()
+    await expect(workpodPage.revisionHistoryItems.first()).toBeVisible();
+
+    await workpodPage.revisionHistoryItems.last().click()
+    await workpodPage.rollback.click()
+    await workpodPage.rollbackWorkpod.click()
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
 })

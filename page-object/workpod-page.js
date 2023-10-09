@@ -40,6 +40,11 @@ exports.WorkpodPage = class WorkpodPage {
         this.editButton = page.locator('button.view-edit-top-btn')
         this.actionButtonsInEdit = page.locator('#app-table button.actions-button')
         this.changePolicyOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Change Policy' })
+        this.viewRivisionBtn = page.locator('div.revision-btn')
+        this.revisionHistoryItems = page.locator('.revision-panel .revision-item')
+        this.copyAsNewDraft = page.locator('button span.mat-button-wrapper', { hasText: ' Copy as New Draft ' })
+        this.rollback = page.locator('button span.mat-button-wrapper', { hasText: ' Rollback ' })
+        this.rollbackWorkpod = page.locator('[role="dialog"] #confirm-btn')
     }
 
     async clickOnCheckBox(index) {
