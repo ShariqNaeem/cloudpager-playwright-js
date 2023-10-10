@@ -1,4 +1,4 @@
-const { test, expect, request } = require('@playwright/test')
+const { test, expect } = require('@playwright/test')
 const { LoginPage } = require('../page-object/login-page')
 const { DashboardPage } = require('../page-object/dashboard-page')
 const { WorkpodPage } = require('../page-object/workpod-page')
