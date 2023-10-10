@@ -381,3 +381,30 @@ test('Validate the user is perform the rollback on revisions', async () => {
     await workpodPage.rollbackWorkpod.click()
     await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
 })
+
+test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+    flag = false;
+
+    await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('domcontentloaded')
+    await workpodPage.addWorkpod.click()
+    await page.waitForSelector('#wb-name-input')
+
+    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
+    await workpodPage.saveDraftButton.click()
+    await workpodPage.verfiyAlertByText(workpodData.validationMessages.newDraftAlertMessage)
+    await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
+
+    await dashboardPage.workpodSideNav.waitFor();
+    await dashboardPage.workpodSideNav.click()
+    await workpodPage.draftsSection.click()
+    await workpodPage.actionButton.click()
+    await workpodPage.editOption.click()
+    await workpodPage.editingAlert.isVisible()
+
+    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.updatedDescription)
+    await workpodPage.saveDraftButton.click()
+    await workpodPage.verfiyAlertByText(workpodData.validationMessages.saveToDraftsMessage)
+})

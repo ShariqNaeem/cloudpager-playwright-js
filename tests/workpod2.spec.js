@@ -63,50 +63,6 @@ for (const record of workpodData.inputValidationsWorkpods) {
     })
 }
 
-// We will cover this test case in the "createValidWorkpods".
-test.skip('Add/Save a workpod with three spaces in name and description.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await page.waitForLoadState('domcontentloaded')
-    await dashboardPage.workpodSideNav.click()
-    await workpodPage.addWorkpod.click()
-    await workpodPage.workpodName.fill('   ', { delay: 100 });
-    await workpodPage.workpodDescription.fill('   ', { delay: 100 });
-    await workpodPage.saveDraftButton.click();
-
-    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
-test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = false;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await page.waitForSelector('#wb-name-input')
-
-    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
-    await workpodPage.saveDraftButton.click()
-    await workpodPage.verfiyAlertByText(workpodData.validationMessages.newDraftAlertMessage)
-    await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
-
-    await dashboardPage.workpodSideNav.waitFor();
-    await dashboardPage.workpodSideNav.click()
-    await workpodPage.draftsSection.click()
-    await workpodPage.actionButton.click()
-    await workpodPage.editOption.click()
-    await workpodPage.editingAlert.isVisible()
-
-    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.updatedDescription)
-    await workpodPage.saveDraftButton.click()
-    await workpodPage.verfiyAlertByText(workpodData.validationMessages.saveToDraftsMessage)
-})
-
 for (const record of workpodData.createValidWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
