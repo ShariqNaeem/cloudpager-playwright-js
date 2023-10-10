@@ -45,7 +45,7 @@ for (const record of workpodData.inputValidationsWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
-        flag = record.isDelete;
+        flag = true;
 
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('domcontentloaded')
@@ -83,7 +83,7 @@ test.skip('Add/Save a workpod with three spaces in name and description.', async
 test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
-    flag = true;
+    flag = false;
 
     await dashboardPage.workpodSideNav.click()
     await page.waitForLoadState('domcontentloaded')
@@ -111,7 +111,7 @@ for (const record of workpodData.createValidWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
-        flag = record.isDelete;
+        flag = true;
 
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('domcontentloaded')

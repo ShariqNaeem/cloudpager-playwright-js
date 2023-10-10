@@ -259,7 +259,6 @@
             "testName": "Add/Save a workpod with French name and description",
             "name": "c'est mon module de travail de test",
             "description": "Ceci est la description de mon test",
-            "isDelete": true,
             "applications": [],
             "groups": [],
             "users": []
@@ -268,7 +267,6 @@
             "testName": "Add/Save a workpod with 160 characters (Max limit) in name and description",
             "name": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc",
             "description": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghc",
-            "isDelete": true,
             "applications": [],
             "groups": [],
             "users": []
@@ -277,7 +275,6 @@
             "testName": "Add/Save a workpod with 3 numbers in name and description",
             "name": "123",
             "description": "123",
-            "isDelete": true,
             "applications": [],
             "groups": [],
             "users": []
@@ -286,7 +283,6 @@
             "testName": "Add/Save a workpod with 3 special characters in name and description",
             "name": "$#@",
             "description": "$#@",
-            "isDelete": true,
             "applications": [],
             "groups": [],
             "users": []
@@ -295,7 +291,6 @@
             "testName": "Add/Save a workpod with all 30 applications selected.",
             "name": "Automation workpod 30 applications",
             "description": "Automation workpod with 30 applications",
-            "isDelete": true,
             "applications": [
                 "1_appv_putty",
                 "1_stp_babel",
@@ -308,7 +303,6 @@
             "testName": "Add/Save a workpod with all 30 groups selected.",
             "name": "Automation workpod 30 groups",
             "description": "Automation workpod with 30 groups",
-            "isDelete": true,
             "applications": [],
             "groups": [
                 "1NGroupTest_1",
@@ -321,7 +315,6 @@
             "testName": "Add/Save a workpod with all 30 users selected.",
             "name": "Automation workpod 30 users",
             "description": "Automation workpod with 30 users",
-            "isDelete": true,
             "applications": [],
             "groups": [],
             "users": [
@@ -345,7 +338,6 @@
             "testName": "Add/Save a workpod without name and description.",
             "name": "",
             "description": "",
-            "isDelete": false,
             "nameErrorMsg": "A value must be provided",
             "descriptionErrorMsg": ""
         },
@@ -353,7 +345,6 @@
             "testName": "Add/Save a workpod with 1 character in name and description",
             "name": "@",
             "description": "$",
-            "isDelete": false,
             "nameErrorMsg": "Value must be at least 3 characters",
             "descriptionErrorMsg": "Value must be at least 3 characters"
         },
@@ -361,7 +352,6 @@
             "testName": "Add/Save a workpod with greater than 160 characters in name and description",
             "name": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghcvghsdvcgvshgdvc",
             "description": "gcvaghsdvcghavsdghcaghdsvchgavsdghcvhagdsvcghvasdhgvcghadsvhgcvahgdsvcvashgdvcasdghvchgsvdghchgsdvgcvsgdvcghvsdghvcghsvdghcvshgvdcghvshgdcvghsvdhgcvshgvdcsvdghcvghsdvcgvshgdvc",
-            "isDelete": false,
             "nameErrorMsg": "Value must be at less than 160 characters",
             "descriptionErrorMsg": "Value must be at less than 160 characters"
         }
