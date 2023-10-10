@@ -41,11 +41,11 @@ test.afterAll(async () => {
     await page.close();
 })
 
-for (const record of workpodData.inputValidationsWorkpods) {
+for (const record of workpodData.invalidInputWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
-        flag = true;
+        flag = false;
 
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('domcontentloaded')
@@ -63,7 +63,7 @@ for (const record of workpodData.inputValidationsWorkpods) {
     })
 }
 
-for (const record of workpodData.createValidWorkpods) {
+for (const record of workpodData.validinputWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
