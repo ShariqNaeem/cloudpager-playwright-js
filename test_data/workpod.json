@@ -130,5 +130,9 @@
             "UAT1",
             "UAT2"
         ]
-    }
+    },
+    "workpodType": [
+        "draft",
+        "publish"
+    ]
 }
