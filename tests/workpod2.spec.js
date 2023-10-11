@@ -110,10 +110,9 @@ for (const record of workpodData.validinputWorkpods) {
             await workpodPage.editOption.click()
             await workpodPage.editingAlert.isVisible()
 
-            await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.name, workpodData.autodeployValidationWorkpod.updatedDescription)
+            await workpodPage.setNameAndDescription(record.name, workpodData.autodeployValidationWorkpod.updatedDescription)
             await workpodPage.saveDraftButton.click()
             await workpodPage.verfiyAlertByText(workpodData.validationMessages.saveToDraftsMessage)
-            flag=false //there is an issue with the deletion of of edited workpod in the application 
         }
     })
 }
