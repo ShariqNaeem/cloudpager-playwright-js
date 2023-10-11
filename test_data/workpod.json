@@ -67,6 +67,14 @@
                 "Auto User002",
                 "Auto User003"
             ]
+        },
+        {
+            "testName": "Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.",
+            "name": "Automation simple workpod",
+            "description": "Automation workpod without applications, groups, and users",
+            "applications": [],
+            "groups": [],
+            "users": []
         }
     ],
     "validationMessages": {

@@ -100,5 +100,19 @@ for (const record of workpodData.validinputWorkpods) {
         await workpodPage.saveDraftButton.click()
         await workpodPage.verfiyAlertByText(workpodData.validationMessages.newDraftAlertMessage)
         await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
+
+        //For edge test case: Editing the workpod that has 0 application, group, and user
+        if (record.users.length === 0 && record.groups.length === 0 && record.applications.length === 0) {
+            await dashboardPage.workpodSideNav.waitFor();
+            await dashboardPage.workpodSideNav.click()
+            await workpodPage.draftsSection.click()
+            await workpodPage.actionButton.click()
+            await workpodPage.editOption.click()
+            await workpodPage.editingAlert.isVisible()
+
+            await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.name, workpodData.autodeployValidationWorkpod.updatedDescription)
+            await workpodPage.saveDraftButton.click()
+            await workpodPage.verfiyAlertByText(workpodData.validationMessages.saveToDraftsMessage)
+        }
     })
 }
