@@ -331,7 +331,7 @@ test('Validate the user is perform the rollback on revisions', async () => {
 })
 
 for (const record of workpodData.workpodType) {
-    test.only(`Go to ${record} tab and delete any workpod`, async () => {
+    test(`Go to ${record} tab and delete any workpod`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
 
