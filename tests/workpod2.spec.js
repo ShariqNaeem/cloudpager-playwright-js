@@ -8,7 +8,7 @@ import workpodData from '../test_data/workpod.json'
 
 test.describe.configure({ mode: 'serial' });
 let page;
-let flag;
+let deleteWorkpodFlag;
 
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -26,7 +26,7 @@ test.afterEach(async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
-    if (flag) {
+    if (deleteWorkpodFlag) {
         await dashboardPage.workpodSideNav.waitFor();
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('load')
@@ -45,7 +45,7 @@ for (const record of workpodData.invalidInputWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
-        flag = false;
+        deleteWorkpodFlag = false;
 
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('domcontentloaded')
@@ -67,7 +67,7 @@ for (const record of workpodData.validinputWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
-        flag = true;
+        deleteWorkpodFlag = true;
 
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('domcontentloaded')
