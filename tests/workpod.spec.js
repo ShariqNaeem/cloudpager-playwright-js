@@ -1,4 +1,4 @@
-const { test, expect, request } = require('@playwright/test')
+const { test, expect } = require('@playwright/test')
 const { LoginPage } = require('../page-object/login-page')
 const { DashboardPage } = require('../page-object/dashboard-page')
 const { WorkpodPage } = require('../page-object/workpod-page')
@@ -8,10 +8,6 @@ import workpodData from '../test_data/workpod.json'
 
 test.describe.configure({ mode: 'serial' });
 let page;
-
-test.use({
-    viewport: { width: 1500, height: 900 },
-  });
 
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -29,75 +25,74 @@ test.afterAll(async () => {
     await page.close();
 });
 
-test('Validate that user is able to create the workpod and save it to draft.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
+for (const record of workpodData.workpodType) {
+    test(`Validate that user is able to create the workpod and save it to ${record}.`, async () => {
+        const dashboardPage = new DashboardPage(page)
+        const workpodPage = new WorkpodPage(page)
 
-    await dashboardPage.workpodSideNav.waitFor();
-    await dashboardPage.workpodSideNav.click()
-    await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
-    await workpodPage.addApplicationButton.click()
+        await dashboardPage.workpodSideNav.waitFor();
+        await dashboardPage.workpodSideNav.click()
+        await workpodPage.addWorkpod.click()
+        await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.name, workpodData.autodeployValidationWorkpod.description)
+        await workpodPage.addApplicationButton.click()
 
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[1])
-    await workpodPage.saveButton.click()
+        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[0])
+        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[1])
+        await workpodPage.saveButton.click()
 
-    await workpodPage.addUserGroupButton.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
+        await workpodPage.addUserGroupButton.click()
+        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[0])
+        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[1])
 
-    await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
-    await workpodPage.saveButton.click()
-    await workpodPage.saveDraftButton.click();
+        await workpodPage.userTab.click()
+        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[0])
+        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[1])
+        await workpodPage.saveButton.click()
 
-    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.newDraftAlertMessage)
-    await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
-})
+        if (record === "draft") {
+            await workpodPage.saveDraftButton.click();
+            await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.newDraftAlertMessage)
+            await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
+        } else {
+            await workpodPage.publishButton.click();
+            await workpodPage.enterPublishComment(workpodData.autodeployValidationWorkpod.comment)
+            await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.newPublishAlertMessage)
+            await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
+        }
+    })
+}
 
-test('Go to Drafts section and delete any existing Draft.', async () => {
+test('Validate that user is able to edit the workpod and publish it', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
     await dashboardPage.workpodSideNav.waitFor();
     await dashboardPage.workpodSideNav.click()
     await workpodPage.draftsSection.click()
+    await workpodPage.actionButton.click()
+    await workpodPage.editOption.click()
+    await workpodPage.editingAlert.isVisible()
 
-    await workpodPage.firstWorkpodName.waitFor();
-    await expect.soft(workpodPage.firstWorkpodName).toContainText(workpodData.sampleWorkpod.name)
-    await workpodPage.deleteFirstWorkpod();
-    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.deleteWorkpodMessage)
-})
-
-test('Validate that user is able to create the workpod and publish it', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-
-    await dashboardPage.workpodSideNav.waitFor();
-    await dashboardPage.workpodSideNav.click()
-    await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
-    await workpodPage.addApplicationButton.click()
-
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[1])
+    await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.name, workpodData.autodeployValidationWorkpod.updatedDescription)
+    await workpodPage.addButtonInDraft.click({ force: true });
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[4])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[3])
     await workpodPage.saveButton.click()
 
-    await workpodPage.addUserGroupButton.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
+    await workpodPage.groupAndUsers.click()
+    await workpodPage.addButtonInDraft.click({ force: true })
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[2])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[3])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[2])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[3])
     await workpodPage.saveButton.click()
-    await workpodPage.publishButton.click();
+    await workpodPage.publishButton.click()
 
-    await workpodPage.enterPublishComment(workpodData.sampleWorkpod.comment)
-    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.newPublishAlertMessage)
-    await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
+    await workpodPage.enterPublishComment(workpodData.autodeployValidationWorkpod.comment)
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
+
 })
 
 test('Go to Published Workpod section and Edit any published workpod and then Saved it as a draft', async () => {
@@ -108,30 +103,29 @@ test('Go to Published Workpod section and Edit any published workpod and then Sa
     await dashboardPage.workpodSideNav.click()
     await workpodPage.publishedSection.click()
     await workpodPage.firstWorkpodName.waitFor();
-    await expect.soft(workpodPage.firstWorkpodName).toContainText(workpodData.sampleWorkpod.name)
+    await expect.soft(workpodPage.firstWorkpodName).toContainText(workpodData.autodeployValidationWorkpod.name)
 
     await workpodPage.actionButton.click()
     await workpodPage.editOption.click()
     await workpodPage.editingAlert.isVisible()
 
     const randomName = workpodPage.generateString();
-    await workpodPage.setNameAndDescription(randomName, workpodData.sampleWorkpod.updatedDescription)
+    await workpodPage.setNameAndDescription(randomName, workpodData.autodeployValidationWorkpod.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
 
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[2])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[3])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[2])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[3])
     await workpodPage.saveButton.click()
-
 
     await workpodPage.groupAndUsers.click()
     await workpodPage.addButtonInDraft.click({ force: true })
 
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[1])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[2])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[2])
     await workpodPage.saveButton.click()
     await workpodPage.saveDraftButton.click()
     await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.saveToDraftsMessage)
@@ -148,103 +142,24 @@ test('Go to Draft workpod, Edit it but dont save it, just discard at the end', a
     await workpodPage.editOption.click()
     await workpodPage.editingAlert.isVisible()
 
-    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.updatedName, workpodData.sampleWorkpod.updatedDescription)
+    await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.name, workpodData.autodeployValidationWorkpod.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[4])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[4])
     await workpodPage.saveButton.click()
 
     await workpodPage.groupAndUsers.click()
     await workpodPage.addButtonInDraft.click({ force: true })
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[1])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[2])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[2])
     await workpodPage.saveButton.click()
     await workpodPage.discardDraft.click()
     await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.removeFromDraftMessage)
 
-})
-
-test('Go to Published Workpod section and Edit any published workpod and then Saved it', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-
-    await dashboardPage.workpodSideNav.waitFor();
-    await dashboardPage.workpodSideNav.click()
-    await workpodPage.publishedSection.click()
-    await workpodPage.actionButton.click()
-    await workpodPage.editOption.click()
-    await workpodPage.editingAlert.isVisible()
-
-    const randomName = workpodPage.generateString();
-    await workpodPage.setNameAndDescription(randomName, workpodData.sampleWorkpod.updatedDescription)
-    await workpodPage.addButtonInDraft.click({ force: true });
-
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[2])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[3])
-    await workpodPage.saveButton.click()
-
-    await workpodPage.groupAndUsers.click()
-    await workpodPage.addButtonInDraft.click({ force: true })
-
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[2])
-
-    await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[0])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
-    await workpodPage.saveButton.click()
-    await workpodPage.saveDraftButton.click()
-    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.saveToDraftsMessage)
-})
-
-test('Validate that user is able to edit the workpod and publish it', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-
-    await dashboardPage.workpodSideNav.waitFor();
-    await dashboardPage.workpodSideNav.click()
-    await workpodPage.draftsSection.click()
-    await workpodPage.actionButton.click()
-    await workpodPage.editOption.click()
-    await workpodPage.editingAlert.isVisible()
-
-    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.updatedName, workpodData.sampleWorkpod.updatedDescription)
-    await workpodPage.addButtonInDraft.click({ force: true });
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[4])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[3])
-    await workpodPage.saveButton.click()
-
-    await workpodPage.groupAndUsers.click()
-    await workpodPage.addButtonInDraft.click({ force: true })
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[2])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[3])
-
-    await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[2])
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[3])
-    await workpodPage.saveButton.click()
-    await workpodPage.publishButton.click()
-
-    await workpodPage.enterPublishComment(workpodData.sampleWorkpod.comment)
-    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
-
-})
-
-test('Go to published tab and delete any workpod', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-
-    await dashboardPage.workpodSideNav.waitFor();
-    await dashboardPage.workpodSideNav.click()
-    await workpodPage.publishedSection.click()
-
-    await workpodPage.firstWorkpodName.waitFor();
-    await workpodPage.deleteFirstWorkpod();
-    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.deleteWorkpodMessage)
 })
 
 test('Switching between the filters, draft, publish, and all', async () => {
@@ -269,21 +184,21 @@ test('Validate the change policy while user edit the workpod', async () => {
     await dashboardPage.workpodSideNav.waitFor()
     await dashboardPage.workpodSideNav.click()
     await workpodPage.addWorkpod.click()
-    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
+    await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.name, workpodData.autodeployValidationWorkpod.description)
     await workpodPage.addApplicationButton.click()
 
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.applications[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[1])
     await workpodPage.saveButton.click()
 
     await workpodPage.addUserGroupButton.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.groups[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[1])
 
     await workpodPage.userTab.click()
-    await workpodPage.clickOnCheckBoxByText(workpodData.sampleWorkpod.users[1])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[1])
     await workpodPage.saveButton.click()
     await workpodPage.publishButton.click();
 
-    await workpodPage.enterPublishComment(workpodData.sampleWorkpod.comment)
+    await workpodPage.enterPublishComment(workpodData.autodeployValidationWorkpod.comment)
     await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.newPublishAlertMessage)
     await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
 
@@ -310,6 +225,7 @@ test('Go to published workpods and user is able to see the view revision option'
 })
 
 test('Verify that user is able to see the revisions history section after 4 times edit the workpod', async () => {
+    const editNames = ["Add applications for editing workpod", "Add groups for editing workpod", "Add users for editing workpod", "Remove a user for editing workpod"]
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
@@ -320,13 +236,45 @@ test('Verify that user is able to see the revisions history section after 4 time
     await workpodPage.firstWorkpodCard.click()
     await expect(workpodPage.viewRivisionBtn).toBeVisible()
 
-    for (let index = 0; index < 4; index++) {
+    for (let index = 0; index < editNames.length; index++) {
         await workpodPage.editButton.waitFor()
         await workpodPage.editButton.click()
-        const randomDescription = workpodPage.generateString()
-        await workpodPage.workpodDescription.fill(randomDescription)
+
+        await workpodPage.workpodName.fill(editNames[index])
+
+        switch (index) {
+            case 0:
+                await workpodPage.addButtonInDraft.click({ force: true });
+                await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[1])
+                await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[6])
+                await workpodPage.saveButton.click()
+                break;
+
+            case 1:
+                await workpodPage.groupAndUsers.click()
+                await workpodPage.addButtonInDraft.click({ force: true })
+                await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[0])
+                await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[1])
+                await workpodPage.saveButton.click()
+                break;
+
+            case 2:
+                await workpodPage.groupAndUsers.click()
+                await workpodPage.addButtonInDraft.click({ force: true })
+                await workpodPage.userTab.click()
+                await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[1])
+                await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[2])
+                await workpodPage.saveButton.click()
+                break;
+
+            case 3:
+                await workpodPage.groupAndUsers.click()
+                await workpodPage.removeButtonEdit.last().click();
+                break;
+        }
+
         await workpodPage.publishButton.click()
-        await workpodPage.enterPublishComment(workpodData.sampleWorkpod.comment)
+        await workpodPage.enterPublishComment(workpodData.autodeployValidationWorkpod.comment)
         await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
     }
 
@@ -346,7 +294,7 @@ test('Validate the user is perform the copy as new draft on revisions', async ()
     await workpodPage.publishedSection.click()
     await workpodPage.firstWorkpodCard.waitFor()
     await workpodPage.firstWorkpodCard.click()
-        
+
     await workpodPage.editButton.waitFor()
     await workpodPage.editButton.click()
     await workpodPage.viewRivisionBtn.waitFor()
@@ -368,7 +316,7 @@ test('Validate the user is perform the rollback on revisions', async () => {
     await workpodPage.publishedSection.click()
     await workpodPage.firstWorkpodCard.waitFor()
     await workpodPage.firstWorkpodCard.click()
-        
+
     await workpodPage.editButton.waitFor()
     await workpodPage.editButton.click()
     await workpodPage.viewRivisionBtn.waitFor()
@@ -381,3 +329,26 @@ test('Validate the user is perform the rollback on revisions', async () => {
     await workpodPage.rollbackWorkpod.click()
     await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
 })
+
+for (const record of workpodData.workpodType) {
+    test.only(`Go to ${record} tab and delete any workpod`, async () => {
+        const dashboardPage = new DashboardPage(page)
+        const workpodPage = new WorkpodPage(page)
+
+        await dashboardPage.workpodSideNav.waitFor()
+        await dashboardPage.workpodSideNav.click()
+        if (record === "draft") {
+            await workpodPage.draftsSection.click()
+        }
+
+        if (record === "publish") {
+            await workpodPage.publishedSection.click()
+        }
+
+        await workpodPage.searchField.click()
+        await workpodPage.searchField.fill(workpodData.autodeployValidationWorkpod.searchName)
+        await workpodPage.firstWorkpodName.waitFor()
+        await workpodPage.deleteFirstWorkpod()
+        await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.deleteWorkpodMessage)
+    })
+}

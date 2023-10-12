@@ -45,6 +45,8 @@ exports.WorkpodPage = class WorkpodPage {
         this.copyAsNewDraft = page.locator('button span.mat-button-wrapper', { hasText: ' Copy as New Draft ' })
         this.rollback = page.locator('button span.mat-button-wrapper', { hasText: ' Rollback ' })
         this.rollbackWorkpod = page.locator('[role="dialog"] #confirm-btn')
+        this.removeButtonEdit = page.locator('td.mat-column-remove button')
+        this.searchField = page.locator('#search-input')
     }
 
     async clickOnCheckBox(index) {

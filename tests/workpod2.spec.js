@@ -1,4 +1,4 @@
-const { test, expect, request } = require('@playwright/test')
+const { test, expect } = require('@playwright/test')
 const { LoginPage } = require('../page-object/login-page')
 const { DashboardPage } = require('../page-object/dashboard-page')
 const { WorkpodPage } = require('../page-object/workpod-page')
@@ -8,7 +8,7 @@ import workpodData from '../test_data/workpod.json'
 
 test.describe.configure({ mode: 'serial' });
 let page;
-let flag;
+let deleteWorkpodFlag;
 
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -26,7 +26,7 @@ test.afterEach(async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
-    if (flag) {
+    if (deleteWorkpodFlag) {
         await dashboardPage.workpodSideNav.waitFor();
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('load')
@@ -41,11 +41,11 @@ test.afterAll(async () => {
     await page.close();
 })
 
-for (const record of workpodData.inputValidationsWorkpods) {
+for (const record of workpodData.invalidInputWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
-        flag = record.isDelete;
+        deleteWorkpodFlag = false;
 
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('domcontentloaded')
@@ -63,55 +63,11 @@ for (const record of workpodData.inputValidationsWorkpods) {
     })
 }
 
-// We will cover this test case in the "createValidWorkpods".
-test.skip('Add/Save a workpod with three spaces in name and description.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await page.waitForLoadState('domcontentloaded')
-    await dashboardPage.workpodSideNav.click()
-    await workpodPage.addWorkpod.click()
-    await workpodPage.workpodName.fill('   ', { delay: 100 });
-    await workpodPage.workpodDescription.fill('   ', { delay: 100 });
-    await workpodPage.saveDraftButton.click();
-
-    await expect.soft(workpodPage.alertDialog.last()).toBeVisible()
-    await expect.soft(workpodPage.successMessgae).toContainText('Workpod Created')
-})
-
-test('Under the Negative/Edge cases, be sure to test editing with 0 apps and 0 users/groups.', async () => {
-    const dashboardPage = new DashboardPage(page)
-    const workpodPage = new WorkpodPage(page)
-    flag = true;
-
-    await dashboardPage.workpodSideNav.click()
-    await page.waitForLoadState('domcontentloaded')
-    await workpodPage.addWorkpod.click()
-    await page.waitForSelector('#wb-name-input')
-
-    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.description)
-    await workpodPage.saveDraftButton.click()
-    await workpodPage.verfiyAlertByText(workpodData.validationMessages.newDraftAlertMessage)
-    await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
-
-    await dashboardPage.workpodSideNav.waitFor();
-    await dashboardPage.workpodSideNav.click()
-    await workpodPage.draftsSection.click()
-    await workpodPage.actionButton.click()
-    await workpodPage.editOption.click()
-    await workpodPage.editingAlert.isVisible()
-
-    await workpodPage.setNameAndDescription(workpodData.sampleWorkpod.name, workpodData.sampleWorkpod.updatedDescription)
-    await workpodPage.saveDraftButton.click()
-    await workpodPage.verfiyAlertByText(workpodData.validationMessages.saveToDraftsMessage)
-})
-
-for (const record of workpodData.createValidWorkpods) {
+for (const record of workpodData.validinputWorkpods) {
     test(`${record.testName}`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
-        flag = record.isDelete;
+        deleteWorkpodFlag = true;
 
         await dashboardPage.workpodSideNav.click()
         await page.waitForLoadState('domcontentloaded')
@@ -144,5 +100,19 @@ for (const record of workpodData.createValidWorkpods) {
         await workpodPage.saveDraftButton.click()
         await workpodPage.verfiyAlertByText(workpodData.validationMessages.newDraftAlertMessage)
         await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
+
+        //For edge test case: Editing the workpod that has 0 application, group, and user
+        if (record.users.length === 0 && record.groups.length === 0 && record.applications.length === 0) {
+            await dashboardPage.workpodSideNav.waitFor();
+            await dashboardPage.workpodSideNav.click()
+            await workpodPage.draftsSection.click()
+            await workpodPage.actionButton.click()
+            await workpodPage.editOption.click()
+            await workpodPage.editingAlert.isVisible()
+
+            await workpodPage.setNameAndDescription(record.name, workpodData.autodeployValidationWorkpod.updatedDescription)
+            await workpodPage.saveDraftButton.click()
+            await workpodPage.verfiyAlertByText(workpodData.validationMessages.saveToDraftsMessage)
+        }
     })
 }
