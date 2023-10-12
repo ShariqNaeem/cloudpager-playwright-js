@@ -114,6 +114,7 @@
         "description": "Automated description",
         "updatedName": "Automation Edited",
         "updatedDescription": "Automated Description Edited",
+        "searchName": "automation",
         "comment": "Automated comment...",
         "applications": [
             "1_appv_putty",

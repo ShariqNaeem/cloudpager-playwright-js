@@ -73,7 +73,7 @@ test('Validate that user is able to edit the workpod and publish it', async () =
     await workpodPage.editOption.click()
     await workpodPage.editingAlert.isVisible()
 
-    await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.updatedName, workpodData.autodeployValidationWorkpod.updatedDescription)
+    await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.name, workpodData.autodeployValidationWorkpod.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
     await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[4])
     await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[3])
@@ -142,7 +142,7 @@ test('Go to Draft workpod, Edit it but dont save it, just discard at the end', a
     await workpodPage.editOption.click()
     await workpodPage.editingAlert.isVisible()
 
-    await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.updatedName, workpodData.autodeployValidationWorkpod.updatedDescription)
+    await workpodPage.setNameAndDescription(workpodData.autodeployValidationWorkpod.name, workpodData.autodeployValidationWorkpod.updatedDescription)
     await workpodPage.addButtonInDraft.click({ force: true });
     await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[0])
     await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.applications[4])
@@ -331,7 +331,7 @@ test('Validate the user is perform the rollback on revisions', async () => {
 })
 
 for (const record of workpodData.workpodType) {
-    test(`Go to ${record} tab and delete any workpod`, async () => {
+    test.only(`Go to ${record} tab and delete any workpod`, async () => {
         const dashboardPage = new DashboardPage(page)
         const workpodPage = new WorkpodPage(page)
 
@@ -345,6 +345,8 @@ for (const record of workpodData.workpodType) {
             await workpodPage.publishedSection.click()
         }
 
+        await workpodPage.searchField.click()
+        await workpodPage.searchField.fill(workpodData.autodeployValidationWorkpod.searchName)
         await workpodPage.firstWorkpodName.waitFor()
         await workpodPage.deleteFirstWorkpod()
         await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.deleteWorkpodMessage)
