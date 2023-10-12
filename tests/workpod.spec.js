@@ -9,10 +9,6 @@ import workpodData from '../test_data/workpod.json'
 test.describe.configure({ mode: 'serial' });
 let page;
 
-test.use({
-    viewport: { width: 1500, height: 900 },
-});
-
 test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     const loginPage = new LoginPage(page)
