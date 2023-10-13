@@ -1,0 +1,42 @@
+{
+    "validationMessages": {
+        "storefrontCreatedMessage": "Storefront Created",
+        "newDraftAlertMessage": "New draft created.",
+        "newPublishAlertMessage": "New storefront published",
+        "saveToDraftsMessage": "have been saved to your drafts.",
+        "deleteStorefrontMessage": "Storefront deleted.",
+        "publishStorefrontMessage": "have been published successfully.",
+        "removeFromDraftMessage": "has been removed from your drafts."
+    },
+    "autodeployValidationStorefront": {
+        "name": "Automation storefront name",
+        "description": "Automated description",
+        "updatedName": "Automation Edited",
+        "updatedDescription": "Automated Description Edited",
+        "searchName": "automation",
+        "comment": "Automated comment...",
+        "applications": [
+            "1_appv_putty",
+            "1_stp_babel",
+            "FileZilla_PowerShell",
+            "2_appv_InstEdit",
+            "2_stp_notepad++",
+            "GSD_AppV_AdobeAcrobatReaderDC_1",
+            "Notepad++"
+        ],
+        "groups": [
+            "1NGroupTest_1",
+            "1NGroupTest_2",
+            "AAD DC Administrators",
+            "Automation Group 01"
+        ],
+        "users": [
+            "Auto User 001",
+            "Auto User002",
+            "Auto User003",
+            "Billing-Test-1",
+            "UAT1",
+            "UAT2"
+        ]
+    }
+}

@@ -8,5 +8,6 @@ exports.DashboardPage = class DashboardPage {
     constructor(page) {
         this.page = page;
         this.workpodSideNav = page.locator('[href="/admin/workpods"]');
+        this.storefrontSideNav = page.locator('[href="/admin/storefronts"]');
     }
 };
