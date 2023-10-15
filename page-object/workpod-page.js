@@ -40,6 +40,7 @@ exports.WorkpodPage = class WorkpodPage {
         this.editButton = page.locator('button.view-edit-top-btn')
         this.actionButtonsInEdit = page.locator('#app-table button.actions-button')
         this.changePolicyOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Change Policy' })
+        this.removeApplicationOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Remove Application' })
         this.viewRivisionBtn = page.locator('div.revision-btn')
         this.revisionHistoryItems = page.locator('.revision-panel .revision-item')
         this.copyAsNewDraft = page.locator('button span.mat-button-wrapper', { hasText: ' Copy as New Draft ' })
@@ -136,4 +137,20 @@ exports.WorkpodPage = class WorkpodPage {
         const alert = await this.page.locator(`//*[@role="alertdialog" and contains(text(), "${text}")]`)
         await expect.soft(alert).toBeVisible()
     }
+
+    async removeApplication(name) {
+        await this.page.waitForSelector('tbody[role="rowgroup"] tr[role="row"]:first-child td:nth-child(2)')
+        const elements = await this.page.$$('tbody[role="rowgroup"] tr[role="row"] td:nth-child(2)');
+        
+        for (let index= 1; index <= elements.length; index++) {
+          const text = await elements[index].textContent();
+          if (text.includes(name)) {
+            await this.page.locator(`tbody[role="rowgroup"] tr[role="row"]:nth-child(${index}) td:nth-child(7) button`).click();
+            await this.removeApplicationOption.click();
+            return;
+          }
+        }
+        
+        console.log(`Element with text "${name}" not found.`);
+      }
 };
