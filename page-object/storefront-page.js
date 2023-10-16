@@ -35,7 +35,7 @@ exports.StoreFrontPage = class StoreFrontPage {
         this.discardStorefrontDraft = page.locator('#delete-sf-btn')
         this.roleAlert = page.locator('[role="alert"]')
         this.searchInModal = page.locator('[role="dialog"] .mat-form-field-infix input')
-        this.firstWorkpodCard = page.locator('div.drag-drop-list>div:first-child div.wb-card')
+        this.firstWorkpodCard = page.locator('div.drag-drop-list>div:first-child div.sf-card')
         this.editButton = page.locator('button.view-edit-top-btn')
         this.actionButtonsInEdit = page.locator('#app-table button.actions-button')
         this.changePolicyOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Change Policy' })
@@ -74,24 +74,24 @@ exports.StoreFrontPage = class StoreFrontPage {
         await this.deleteBtnInModal.click()
     }
 
-    async firstWorkpodText() {
+    async firstStorefrontText() {
         await this.page.evaluate(() => {
-            const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title');
-            const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge');
+            const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.sf-title');
+            const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.sf-title badge');
             const parentText = parentElement.textContent.split(childElement.textContent);
             return parentText[0];
         });
     }
 
-    async deleteFirstWorkpod() {
+    async deleteFirstStorefront() {
         const workpodName = await this.page.evaluate(() => {
-            const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title');
-            const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.wb-title badge');
+            const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.sf-title');
+            const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.sf-title badge');
             const parentText = parentElement.textContent.split(childElement.textContent);
             return parentText[0];
         });
 
-        await this.actionButton.click()
+        await this.actionStorefrontButton.click()
         await this.deleteOption.click()
         await this.enterWorkpodNameAndDelete(workpodName.trim());
     }
