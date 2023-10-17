@@ -48,6 +48,8 @@ exports.WorkpodPage = class WorkpodPage {
         this.rollbackWorkpod = page.locator('[role="dialog"] #confirm-btn')
         this.removeButtonEdit = page.locator('td.mat-column-remove button')
         this.searchField = page.locator('#search-input')
+        this.editPriority = page.locator('button.edit-priority-btn')
+        this.continueBtn = page.locator('#confirm-btn span.mat-button-wrapper', { hasText: ' Continue ' })
     }
 
     async clickOnCheckBox(index) {
@@ -141,16 +143,67 @@ exports.WorkpodPage = class WorkpodPage {
     async removeApplication(name) {
         await this.page.waitForSelector('tbody[role="rowgroup"] tr[role="row"]:first-child td:nth-child(2)')
         const elements = await this.page.$$('tbody[role="rowgroup"] tr[role="row"] td:nth-child(2)');
-        
-        for (let index= 1; index <= elements.length; index++) {
-          const text = await elements[index].textContent();
-          if (text.includes(name)) {
-            await this.page.locator(`tbody[role="rowgroup"] tr[role="row"]:nth-child(${index}) td:nth-child(7) button`).click();
-            await this.removeApplicationOption.click();
-            return;
-          }
+
+        for (let index = 1; index <= elements.length; index++) {
+            const text = await elements[index].textContent();
+            if (text.includes(name)) {
+                await this.page.locator(`tbody[role="rowgroup"] tr[role="row"]:nth-child(${index}) td:nth-child(7) button`).click();
+                await this.removeApplicationOption.click();
+                return;
+            }
         }
-        
+
         console.log(`Element with text "${name}" not found.`);
-      }
-};
+    }
+
+    async dragAndDropWorkpod() {
+        await this.page.waitForSelector('button.save-btn')
+        await this.page.waitForLoadState('networkidle')
+        // await this.page.waitForSelector('button.save-btn')
+        // await this.page.locator('(//div[@class="wb-card-details"])[1]').dragTo(this.page.locator('(//div[@class="wb-card-details"])[2]'))
+        // await this.page.locator('(//div[@class="cdk-drag draggable-item"])[1]').hover();
+        // await this.page.mouse.down();
+        // await this.page.waitForTimeout(500)
+        // await this.page.locator('(//div[@class="cdk-drag draggable-item"])[2]').hover();
+        // await this.page.mouse.up();
+        const source = this.page.locator('(//div[@class="wb-card"])[1]');
+        const target = this.page.locator('(//div[@class="wb-card"])[2]');
+
+        //await source.dragTo(target);
+        // or specify exact positions relative to the top-left corners of the elements:
+        // await source.dragTo(target, {
+        //     sourcePosition: { x: 200, y: 20 },
+        //     targetPosition: { x: 200, y: 40 },
+        // });
+
+        await this.page.dragAndDrop('(//div[@class="wb-card"])[1]', '(//div[@class="wb-card"])[3]')
+    }
+
+    async deleteAllWorkpod(searchName, messageText) {
+        await this.searchField.click()
+        await this.searchField.fill(`${searchName}`, { delay: 100 });
+        await this.searchField.press('Enter');
+
+        await this.page.waitForLoadState('networkidle')
+        const noWorkpodFound = await this.page.locator('span.no-entities-title');
+        await this.page.waitForSelector('div.drag-drop-list>div:first-child')
+        const workpods = await this.page.$$('div.drag-drop-list>div');
+
+        console.log(workpods.length);
+
+        for (let i = 0; i < workpods.length; i++) {
+            const elementFlag = await noWorkpodFound.isVisible()
+            if (elementFlag) {
+                break;
+            }
+
+            await this.deleteFirstWorkpod()
+            await expect.soft(this.alertDialog).toContainText(messageText)
+
+            await this.searchField.click()
+            await this.searchField.fill(searchName, { delay: 100 });
+            await this.searchField.press('Enter');
+            await this.page.waitForTimeout(2000) // This timeout is used because search functionality took some time to update the DOM
+        }
+    }
+}

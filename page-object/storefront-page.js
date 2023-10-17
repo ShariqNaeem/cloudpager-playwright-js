@@ -132,4 +132,32 @@ exports.StoreFrontPage = class StoreFrontPage {
         const alert = await this.page.locator(`//*[@role="alertdialog" and contains(text(), "${text}")]`)
         await expect.soft(alert).toBeVisible()
     }
+
+    async deleteAllStorefronts(searchName, messageText) {
+        await this.searchField.click()
+        await this.searchField.fill(`${searchName}`, { delay: 100 });
+        await this.searchField.press('Enter');
+        await this.page.waitForTimeout(2000) // This timeout is used because search functionality took some time to update the DOM
+
+        const noStoreFrontsFound = await this.page.locator('span.no-entities-title');
+        await this.page.waitForSelector('div.drag-drop-list>div:first-child')
+        const storeFronts = await this.page.$$('div.drag-drop-list>div');
+
+        console.log(storeFronts.length);
+
+        for (let i = 0; i < storeFronts.length; i++) {
+            const elementFlag = await noStoreFrontsFound.isVisible()
+            if (elementFlag) {
+                break;
+            }
+
+            await this.deleteFirstStorefront()
+            await expect.soft(this.alertDialog).toContainText(messageText)
+
+            await this.searchField.click()
+            await this.searchField.fill(searchName, { delay: 100 });
+            await this.searchField.press('Enter');
+            await this.page.waitForTimeout(2000) // This timeout is used because search functionality took some time to update the DOM
+        }
+    }
 };

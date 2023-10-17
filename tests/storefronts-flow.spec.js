@@ -25,7 +25,7 @@ test.afterAll(async () => {
     await page.close();
 });
 
-test('Validate that user is able to create the storefront and save to draft', async () => {
+test.only('Validate that user is able to create the storefront and save to draft', async () => {
     const dashboardPage = new DashboardPage(page)
     const storeFrontPage = new StoreFrontPage(page)
 
@@ -40,8 +40,8 @@ test('Validate that user is able to create the storefront and save to draft', as
     await storeFrontPage.saveButton.click()
 
     await storeFrontPage.addUserGroupButton.click()
-    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.groups[0])
-    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.groups[1])
+    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.groups[2])
+    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.groups[3])
 
     await storeFrontPage.userTab.click()
     await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.users[0])
@@ -169,4 +169,15 @@ test('Switching between the filters, draft, publish, and all', async () => {
 
     await storeFrontPage.publishedSection.click()
     await expect(page).toHaveURL(/.*publish/)
+})
+
+test.only('Search of Storefronts by name and delete all of them', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const storeFrontPage = new StoreFrontPage(page)
+
+    await dashboardPage.storefrontSideNav.waitFor()
+    await dashboardPage.storefrontSideNav.click()
+    await page.waitForLoadState('networkidle')
+
+    await storeFrontPage.deleteAllStorefronts(storefrontData.autodeployValidationStorefront.name, storefrontData.validationMessages.deleteStorefrontMessage)
 })

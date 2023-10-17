@@ -41,8 +41,8 @@ for (const record of workpodData.workpodType) {
         await workpodPage.saveButton.click()
 
         await workpodPage.addUserGroupButton.click()
-        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[0])
-        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[1])
+        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[2])
+        await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.groups[3])
 
         await workpodPage.userTab.click()
         await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[0])
@@ -352,3 +352,27 @@ for (const record of workpodData.workpodType) {
         await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.deleteWorkpodMessage)
     })
 }
+
+test.skip('Edit priority testcase', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    await dashboardPage.workpodSideNav.waitFor()
+    await dashboardPage.workpodSideNav.click()
+    
+    await workpodPage.editPriority.click()
+    await workpodPage.continueBtn.click()
+    await workpodPage.dragAndDropWorkpod()
+    //await expect.soft(workpodPage.alertDialog).toContainText('Applications in this workpod will have deployment priority over')
+})
+
+test('Search of Workpods by name and delete all of them', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    await dashboardPage.workpodSideNav.waitFor()
+    await dashboardPage.workpodSideNav.click()
+    await page.waitForLoadState('networkidle')
+
+    await workpodPage.deleteAllWorkpod(workpodData.autodeployValidationWorkpod.name, workpodData.validationMessages.deleteWorkpodMessage)
+})

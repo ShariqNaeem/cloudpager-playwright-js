@@ -5,10 +5,12 @@ const { WorkpodPage } = require('../page-object/workpod-page')
 
 import credentials from '../test_data/credentials.json'
 import workpodData from '../test_data/workpod.json'
+let page
 
 test.describe.configure({ mode: 'serial' })
 
-test.beforeEach(async ({ page }) => {
+test.beforeAll(async ({browser}) => {
+    page = await browser.newPage();
     const loginPage = new LoginPage(page)
 
     await loginPage.openURL(credentials.login.url)
@@ -20,11 +22,11 @@ test.beforeEach(async ({ page }) => {
     await page.waitForLoadState('domcontentloaded');
 });
 
-test.afterEach(async ({page}) => {
+test.afterAll(async () => {
     await page.close()
 });
 
-test('Create the workpod and publish it with the adobe reader and notepad++ applications and UAT1 user', async ({page}) => {
+test('Create the workpod and publish it with the adobe reader and notepad++ applications and UAT1 user', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
@@ -53,7 +55,7 @@ test('Create the workpod and publish it with the adobe reader and notepad++ appl
     await expect.soft(workpodPage.successMessgae).toContainText(workpodData.validationMessages.workpodCreatedMessage)
 })
 
-test('Edit the same workpod and remove adobe reader applications from it and and re-publish it', async ({page}) => {
+test('Edit the same workpod and remove adobe reader applications from it and and re-publish it', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
@@ -74,7 +76,7 @@ test('Edit the same workpod and remove adobe reader applications from it and and
     await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
 })
 
-test('Edit the same workpod and add adobe reader, 7 zip applications and re-publish it', async ({page}) => {
+test('Edit the same workpod and add adobe reader, 7 zip applications and re-publish it', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
@@ -99,7 +101,40 @@ test('Edit the same workpod and add adobe reader, 7 zip applications and re-publ
     await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
 })
 
-test('Delete the same workpod in the end', async ({page}) => {
+test('Edit the same workpod and remove only UAT1 user and add auto user 1, re-publish it', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const workpodPage = new WorkpodPage(page)
+
+    await dashboardPage.workpodSideNav.waitFor()
+    await dashboardPage.workpodSideNav.click()
+    await workpodPage.publishedSection.click()
+    await workpodPage.searchField.click()
+    await workpodPage.searchField.fill(workpodData.autodeployValidationWorkpod.name)
+    await workpodPage.firstWorkpodName.waitFor()
+
+    await workpodPage.actionButton.click()
+    await workpodPage.editOption.click()
+    await workpodPage.editingAlert.isVisible()
+
+    await workpodPage.groupAndUsers.click()
+    await workpodPage.addButtonInDraft.click({ force: true })
+    await workpodPage.userTab.click()
+    
+    await workpodPage.searchInModal.waitFor()
+    await workpodPage.searchInModal.fill(workpodData.autodeployValidationWorkpod.users[4])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[4])
+
+    await workpodPage.searchInModal.fill(workpodData.autodeployValidationWorkpod.users[0])
+    await workpodPage.clickOnCheckBoxByText(workpodData.autodeployValidationWorkpod.users[0])
+
+    await workpodPage.saveButton.click()
+    await workpodPage.publishButton.click()
+
+    await workpodPage.enterPublishComment(workpodData.autodeployValidationWorkpod.comment)
+    await expect.soft(workpodPage.alertDialog).toContainText(workpodData.validationMessages.publishWorkpodMessage)
+})
+
+test('Delete the same workpod in the end', async () => {
     const dashboardPage = new DashboardPage(page)
     const workpodPage = new WorkpodPage(page)
 
