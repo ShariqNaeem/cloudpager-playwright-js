@@ -139,5 +139,13 @@
             "groups": [],
             "users": []
         }
-    ]
+    ],
+    "storefrontCloudpagerApplication": {
+        "url": "https://staging.storefront.cloudpager.net/applications",
+        "applicationNames": [
+            "7-Zip",
+            "GSD_AppV_AdobeAcrobatReaderDC_1"
+        ],
+        "alertText": " is launching. This may take a moment."
+    }
 }

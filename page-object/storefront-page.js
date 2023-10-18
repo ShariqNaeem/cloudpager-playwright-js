@@ -46,6 +46,10 @@ exports.StoreFrontPage = class StoreFrontPage {
         this.rollbackWorkpod = page.locator('[role="dialog"] #confirm-btn')
         this.removeButtonEdit = page.locator('td.mat-column-remove button')
         this.searchField = page.locator('#search-input')
+        this.searchInputField_SF_URL = page.locator('input.search-bar')
+        this.appCardCategory_SF_URL = page.locator('div.category-list div.app-card')
+        this.launchBtn_SF_URL = page.locator('div.launch-text')
+        this.bannerHeaderContent = page.locator('div.banner-container')
     }
 
     async clickOnCheckBox(index) {
@@ -159,5 +163,10 @@ exports.StoreFrontPage = class StoreFrontPage {
             await this.searchField.press('Enter');
             await this.page.waitForTimeout(2000) // This timeout is used because search functionality took some time to update the DOM
         }
+    }
+
+    async openStorefrontApplicationURL(url){
+        await this.page.goto(url);
+        await this.page.waitForLoadState('networkidle');
     }
 };

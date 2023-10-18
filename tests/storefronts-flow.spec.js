@@ -25,7 +25,7 @@ test.afterAll(async () => {
     await page.close();
 });
 
-test.only('Validate that user is able to create the storefront and save to draft', async () => {
+test('Validate that user is able to create the storefront and save to draft', async () => {
     const dashboardPage = new DashboardPage(page)
     const storeFrontPage = new StoreFrontPage(page)
 
@@ -101,7 +101,7 @@ test('Go to Published Workpod section and Edit any published workpod and then Sa
     await storeFrontPage.editingAlert.isVisible()
 
     const randomString = storeFrontPage.generateString();
-    await storeFrontPage.setNameAndDescription(storefrontData.autodeployValidationStorefront.name, storefrontData.autodeployValidationStorefront.updatedDescription+randomString)
+    await storeFrontPage.setNameAndDescription(storefrontData.autodeployValidationStorefront.name, storefrontData.autodeployValidationStorefront.updatedDescription + randomString)
     await storeFrontPage.addButtonInDraft.click({ force: true });
 
     await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.applications[2])
@@ -171,7 +171,7 @@ test('Switching between the filters, draft, publish, and all', async () => {
     await expect(page).toHaveURL(/.*publish/)
 })
 
-test.only('Search of Storefronts by name and delete all of them', async () => {
+test('Search of Storefronts by name and delete all of them', async () => {
     const dashboardPage = new DashboardPage(page)
     const storeFrontPage = new StoreFrontPage(page)
 
@@ -181,3 +181,23 @@ test.only('Search of Storefronts by name and delete all of them', async () => {
 
     await storeFrontPage.deleteAllStorefronts(storefrontData.autodeployValidationStorefront.name, storefrontData.validationMessages.deleteStorefrontMessage)
 })
+
+for (const application of storefrontData.storefrontCloudpagerApplication.applicationNames) {
+    test(`User should able to launch the ${application} application from the Cloudpager Storefront url`, async () => {
+        const storeFrontPage = new StoreFrontPage(page)
+
+        await storeFrontPage.openStorefrontApplicationURL(storefrontData.storefrontCloudpagerApplication.url)
+        await page.title('Cloudpager Storefront')
+
+        await storeFrontPage.searchInputField_SF_URL.fill(application)
+        await expect(storeFrontPage.appCardCategory_SF_URL).toHaveCount(1)
+
+        await storeFrontPage.appCardCategory_SF_URL.hover()
+        const headerContent = await storeFrontPage.bannerHeaderContent.innerText()
+        await expect.soft(headerContent).toContain(application)
+
+        await storeFrontPage.launchBtn_SF_URL.waitFor({ state: 'visible', timeout: 10000 })
+        await storeFrontPage.launchBtn_SF_URL.click()
+        await expect.soft(storeFrontPage.alertDialog).toContainText(application + storefrontData.storefrontCloudpagerApplication.alertText)
+    })
+}
