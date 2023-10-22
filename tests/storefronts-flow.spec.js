@@ -53,7 +53,7 @@ test('Validate that user is able to create the storefront and save to draft', as
     await expect.soft(storeFrontPage.successMessgae).toContainText(storefrontData.validationMessages.storefrontCreatedMessage)
 })
 
-test('Validate that user is able to edit the workpod and publish it', async () => {
+test('Validate that user is able to edit the storefront and publish it', async () => {
     const dashboardPage = new DashboardPage(page)
     const storeFrontPage = new StoreFrontPage(page)
 
@@ -86,7 +86,7 @@ test('Validate that user is able to edit the workpod and publish it', async () =
 
 })
 
-test('Go to Published Workpod section and Edit any published workpod and then Saved it as a draft', async () => {
+test('Go to Published storefront section and Edit any published storefront and then Saved it as a draft', async () => {
     const dashboardPage = new DashboardPage(page)
     const storeFrontPage = new StoreFrontPage(page)
 
@@ -122,7 +122,7 @@ test('Go to Published Workpod section and Edit any published workpod and then Sa
     await expect.soft(storeFrontPage.alertDialog).toContainText(storefrontData.validationMessages.saveToDraftsMessage)
 })
 
-test('Go to Draft workpod, Edit it but dont save it, just discard at the end', async () => {
+test('Go to Draft storefront, Edit it but dont save it, just discard at the end', async () => {
     const dashboardPage = new DashboardPage(page)
     const storeFrontPage = new StoreFrontPage(page)
 
@@ -169,6 +169,159 @@ test('Switching between the filters, draft, publish, and all', async () => {
 
     await storeFrontPage.publishedSection.click()
     await expect(page).toHaveURL(/.*publish/)
+})
+
+test('Validate the change policy while user edit the storefront', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const storeFrontPage = new StoreFrontPage(page)
+
+    await dashboardPage.storefrontSideNav.waitFor()
+    await dashboardPage.storefrontSideNav.click()
+    await storeFrontPage.addStorefront.click()
+    await storeFrontPage.setNameAndDescription(storefrontData.autodeployValidationStorefront.name, storefrontData.autodeployValidationStorefront.description)
+    await storeFrontPage.addApplicationButton.click()
+
+    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.applications[1])
+    await storeFrontPage.saveButton.click()
+
+    await storeFrontPage.addUserGroupButton.click()
+    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.groups[1])
+
+    await storeFrontPage.userTab.click()
+    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.users[1])
+    await storeFrontPage.saveButton.click()
+    await storeFrontPage.publishButton.click();
+
+    await storeFrontPage.enterPublishComment(storefrontData.autodeployValidationStorefront.comment)
+    await expect.soft(storeFrontPage.alertDialog).toContainText(storefrontData.validationMessages.newPublishAlertMessage)
+    await expect.soft(storeFrontPage.successMessgae).toContainText(storefrontData.validationMessages.storefrontCreatedMessage)
+
+    await dashboardPage.storefrontSideNav.click()
+    await storeFrontPage.publishedSection.click()
+    await storeFrontPage.firstStorefrontCard.waitFor()
+    await storeFrontPage.firstStorefrontCard.click()
+    await storeFrontPage.editButton.click()
+    await storeFrontPage.actionButtonsInEdit.first().click()
+    await expect(storeFrontPage.changePolicyOption).toBeVisible()
+})
+
+test('Go to published storefronts and user is able to see the view revision option', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const storeFrontPage = new StoreFrontPage(page)
+
+    await page.reload();
+    await dashboardPage.storefrontSideNav.waitFor()
+    await dashboardPage.storefrontSideNav.click()
+    await storeFrontPage.publishedSection.click()
+    await storeFrontPage.firstStorefrontCard.waitFor()
+    await storeFrontPage.firstStorefrontCard.click()
+    await expect(storeFrontPage.viewRivisionBtn).toBeVisible()
+})
+
+test('Verify that user is able to see the revisions history section after 4 times edit the storefront', async () => {
+    const editNames = ["Add applications for editing storefront", "Add groups for editing storefront", "Add users for editing storefront", "Remove a user for editing storefront"]
+    const dashboardPage = new DashboardPage(page)
+    const storeFrontPage = new StoreFrontPage(page)
+
+    await dashboardPage.storefrontSideNav.waitFor()
+    await dashboardPage.storefrontSideNav.click()
+    await storeFrontPage.publishedSection.click()
+    await storeFrontPage.firstStorefrontCard.waitFor()
+    await storeFrontPage.firstStorefrontCard.click()
+    await expect(storeFrontPage.viewRivisionBtn).toBeVisible()
+
+    for (let index = 0; index < editNames.length; index++) {
+        await storeFrontPage.editButton.waitFor()
+        await storeFrontPage.editButton.click()
+
+        await storeFrontPage.storefrontName.fill(editNames[index])
+
+        switch (index) {
+            case 0:
+                await storeFrontPage.addButtonInDraft.click({ force: true });
+                await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.applications[1])
+                await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.applications[6])
+                await storeFrontPage.saveButton.click()
+                break;
+
+            case 1:
+                await storeFrontPage.groupAndUsers.click()
+                await storeFrontPage.addButtonInDraft.click({ force: true })
+                await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.groups[0])
+                await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.groups[1])
+                await storeFrontPage.saveButton.click()
+                break;
+
+            case 2:
+                await storeFrontPage.groupAndUsers.click()
+                await storeFrontPage.addButtonInDraft.click({ force: true })
+                await storeFrontPage.userTab.click()
+                await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.users[1])
+                await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.users[2])
+                await storeFrontPage.saveButton.click()
+                break;
+
+            case 3:
+                await storeFrontPage.groupAndUsers.click()
+                await storeFrontPage.removeButtonEdit.last().click();
+                break;
+        }
+
+        await storeFrontPage.publishButton.click()
+        await storeFrontPage.enterPublishComment(storefrontData.autodeployValidationStorefront.comment)
+        await expect.soft(storeFrontPage.alertDialog).toContainText(storefrontData.validationMessages.publishStorefrontMessage)
+    }
+
+    await storeFrontPage.editButton.waitFor()
+    await storeFrontPage.viewRivisionBtn.waitFor()
+    await storeFrontPage.viewRivisionBtn.click()
+    await storeFrontPage.revisionHistoryItems.first().waitFor()
+    await expect(storeFrontPage.revisionHistoryItems.first()).toBeVisible();
+})
+
+test('Validate the user is perform the copy as new draft on revisions', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const storeFrontPage = new StoreFrontPage(page)
+
+    await dashboardPage.storefrontSideNav.waitFor()
+    await dashboardPage.storefrontSideNav.click()
+    await storeFrontPage.publishedSection.click()
+    await storeFrontPage.firstStorefrontCard.waitFor()
+    await storeFrontPage.firstStorefrontCard.click()
+
+    await storeFrontPage.editButton.waitFor()
+    await storeFrontPage.editButton.click()
+    await storeFrontPage.viewRivisionBtn.waitFor()
+    await storeFrontPage.viewRivisionBtn.click()
+    await storeFrontPage.revisionHistoryItems.first().waitFor()
+    await expect(storeFrontPage.revisionHistoryItems.first()).toBeVisible();
+
+    await storeFrontPage.revisionHistoryItems.last().click()
+    await storeFrontPage.copyAsNewDraft.click()
+    await expect.soft(storeFrontPage.alertDialog).toContainText(storefrontData.validationMessages.saveToDraftsMessage)
+})
+
+test('Validate the user is perform the rollback on revisions', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const storeFrontPage = new StoreFrontPage(page)
+
+    await dashboardPage.storefrontSideNav.waitFor()
+    await dashboardPage.storefrontSideNav.click()
+    await storeFrontPage.publishedSection.click()
+    await storeFrontPage.firstStorefrontCard.waitFor()
+    await storeFrontPage.firstStorefrontCard.click()
+
+    await storeFrontPage.editButton.waitFor()
+    await storeFrontPage.editButton.click()
+    await storeFrontPage.viewRivisionBtn.waitFor()
+    await storeFrontPage.viewRivisionBtn.click()
+    await storeFrontPage.revisionHistoryItems.first().waitFor()
+    await expect(storeFrontPage.revisionHistoryItems.first()).toBeVisible();
+
+    await storeFrontPage.revisionHistoryItems.last().click()
+    await storeFrontPage.rollback.click()
+    await storeFrontPage.rollbackStorefront.click()
+    await expect.soft(storeFrontPage.alertDialog).toContainText(storefrontData.validationMessages.publishStorefrontMessage)
 })
 
 test('Search of Storefronts by name and delete all of them', async () => {

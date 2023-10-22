@@ -29,13 +29,13 @@ exports.StoreFrontPage = class StoreFrontPage {
         this.groupAndUsers = page.locator('.mat-tab-label-content', { hasText: 'Groups & Users' })
         this.publishCommentField = page.locator('#publish-comment')
         this.publishBtnModal = page.locator('#publish-btn')
-        this.confirmWorkpodNameField = page.locator('input[formcontrolname="confirmName"]')
+        this.confirmStorefrontNameField = page.locator('input[formcontrolname="confirmName"]')
         this.deleteBtnInModal = page.locator('#confirm-btn')
         this.firstStorefrontName = page.locator('.cdk-drop-list.drag-drop-list > div:first-child div.sf-title')
         this.discardStorefrontDraft = page.locator('#delete-sf-btn')
         this.roleAlert = page.locator('[role="alert"]')
         this.searchInModal = page.locator('[role="dialog"] .mat-form-field-infix input')
-        this.firstWorkpodCard = page.locator('div.drag-drop-list>div:first-child div.sf-card')
+        this.firstStorefrontCard = page.locator('div.drag-drop-list>div:first-child div.sf-card')
         this.editButton = page.locator('button.view-edit-top-btn')
         this.actionButtonsInEdit = page.locator('#app-table button.actions-button')
         this.changePolicyOption = page.locator('div[role="menu"] span.action-label', { hasText: 'Change Policy' })
@@ -43,7 +43,7 @@ exports.StoreFrontPage = class StoreFrontPage {
         this.revisionHistoryItems = page.locator('.revision-panel .revision-item')
         this.copyAsNewDraft = page.locator('button span.mat-button-wrapper', { hasText: ' Copy as New Draft ' })
         this.rollback = page.locator('button span.mat-button-wrapper', { hasText: ' Rollback ' })
-        this.rollbackWorkpod = page.locator('[role="dialog"] #confirm-btn')
+        this.rollbackStorefront = page.locator('[role="dialog"] #confirm-btn')
         this.removeButtonEdit = page.locator('td.mat-column-remove button')
         this.searchField = page.locator('#search-input')
         this.searchInputField_SF_URL = page.locator('input.search-bar')
@@ -73,8 +73,8 @@ exports.StoreFrontPage = class StoreFrontPage {
         await this.publishBtnModal.click()
     }
 
-    async enterWorkpodNameAndDelete(name) {
-        await this.confirmWorkpodNameField.fill(name)
+    async enterStoreFrontNameAndDelete(name) {
+        await this.confirmStorefrontNameField.fill(name)
         await this.deleteBtnInModal.click()
     }
 
@@ -88,7 +88,7 @@ exports.StoreFrontPage = class StoreFrontPage {
     }
 
     async deleteFirstStorefront() {
-        const workpodName = await this.page.evaluate(() => {
+        const storefrontName = await this.page.evaluate(() => {
             const parentElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.sf-title');
             const childElement = document.querySelector('.cdk-drop-list.drag-drop-list > div:first-child div.sf-title badge');
             const parentText = parentElement.textContent.split(childElement.textContent);
@@ -97,7 +97,7 @@ exports.StoreFrontPage = class StoreFrontPage {
 
         await this.actionStorefrontButton.click()
         await this.deleteOption.click()
-        await this.enterWorkpodNameAndDelete(workpodName.trim());
+        await this.enterStoreFrontNameAndDelete(storefrontName.trim());
     }
 
     generateString(length = 12) {
