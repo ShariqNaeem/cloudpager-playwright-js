@@ -50,6 +50,8 @@ exports.StoreFrontPage = class StoreFrontPage {
         this.appCardCategory_SF_URL = page.locator('div.category-list div.app-card')
         this.launchBtn_SF_URL = page.locator('div.launch-text')
         this.bannerHeaderContent = page.locator('div.banner-container')
+        this.availabilityRadiBtn = page.locator('.mat-slide-toggle .mat-slide-toggle-bar')
+        this.takeOfflineBtn = page.locator('#confirm-btn span.mat-button-wrapper', { hasText: ' Take Offline ' })
     }
 
     async clickOnCheckBox(index) {
