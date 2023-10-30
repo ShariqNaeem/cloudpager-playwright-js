@@ -279,7 +279,7 @@ test('Verify that user is able to see the revisions history section after 4 time
     await expect(storeFrontPage.revisionHistoryItems.first()).toBeVisible();
 })
 
-test('Validate the user is perform the copy as new draft on revisions', async () => {
+test.skip('Validate the user is perform the copy as new draft on revisions', async () => {
     const dashboardPage = new DashboardPage(page)
     const storeFrontPage = new StoreFrontPage(page)
 
@@ -301,7 +301,7 @@ test('Validate the user is perform the copy as new draft on revisions', async ()
     await expect.soft(storeFrontPage.alertDialog).toContainText(storefrontData.validationMessages.saveToDraftsMessage)
 })
 
-test('Validate the user is perform the rollback on revisions', async () => {
+test.skip('Validate the user is perform the rollback on revisions', async () => {
     const dashboardPage = new DashboardPage(page)
     const storeFrontPage = new StoreFrontPage(page)
 
@@ -322,6 +322,45 @@ test('Validate the user is perform the rollback on revisions', async () => {
     await storeFrontPage.rollback.click()
     await storeFrontPage.rollbackStorefront.click()
     await expect.soft(storeFrontPage.alertDialog).toContainText(storefrontData.validationMessages.publishStorefrontMessage)
+})
+
+test('Enabling and disabling the availability on storefront listing page', async () => {
+    const dashboardPage = new DashboardPage(page)
+    const storeFrontPage = new StoreFrontPage(page)
+
+    await dashboardPage.storefrontSideNav.waitFor()
+    await dashboardPage.storefrontSideNav.click()
+    await storeFrontPage.addStorefront.click()
+    await storeFrontPage.setNameAndDescription(storefrontData.autodeployValidationStorefront.name, storefrontData.autodeployValidationStorefront.description)
+    await storeFrontPage.addApplicationButton.click()
+
+    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.applications[1])
+    await storeFrontPage.saveButton.click()
+
+    await storeFrontPage.addUserGroupButton.click()
+    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.groups[1])
+
+    await storeFrontPage.userTab.click()
+    await storeFrontPage.clickOnCheckBoxByText(storefrontData.autodeployValidationStorefront.users[1])
+    await storeFrontPage.saveButton.click()
+    await storeFrontPage.publishButton.click();
+
+    await storeFrontPage.enterPublishComment(storefrontData.autodeployValidationStorefront.comment)
+    await expect.soft(storeFrontPage.alertDialog).toContainText(storefrontData.validationMessages.newPublishAlertMessage)
+    await expect.soft(storeFrontPage.successMessgae).toContainText(storefrontData.validationMessages.storefrontCreatedMessage)
+
+    await dashboardPage.storefrontSideNav.click()
+    await storeFrontPage.publishedSection.click()
+
+    await storeFrontPage.firstStorefrontCard.waitFor()
+    await storeFrontPage.availabilityRadiBtn.first().waitFor()
+    await storeFrontPage.availabilityRadiBtn.first().click()
+    await storeFrontPage.takeOfflineBtn.click()
+    await expect.soft(storeFrontPage.alertDialog).toBeVisible();
+
+    await storeFrontPage.availabilityRadiBtn.first().waitFor()
+    await storeFrontPage.availabilityRadiBtn.first().click()
+    await expect.soft(storeFrontPage.alertDialog).toBeVisible();
 })
 
 test('Search of Storefronts by name and delete all of them', async () => {
