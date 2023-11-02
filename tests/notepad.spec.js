@@ -8,6 +8,8 @@ test("Launch and Close Notepad++", async ({ page }) => {
   // await execCommand(notepadPlusPlusPath);
   await execCommand(notepadPlusPlusPath);
 
+  await page.waitForTimeout(10000)
+
   const kill = 'taskkill /F /IM notepad++.exe';
   await execCommand(kill);
 
