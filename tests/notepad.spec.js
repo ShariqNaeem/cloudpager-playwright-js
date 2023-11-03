@@ -1,14 +1,11 @@
-const { exec, spawn } = require("child_process");
 const { test } = require("@playwright/test");
-import { execCommand } from "../utility/command";
+import { execCommand } from "../utility/command2";
 
 test("Launch and Close Notepad++", async ({ page }) => {
   // console.log("Notepad++ has been launched");
   const notepadPlusPlusPath = '"C:\\Program Files\\Notepad++\\notepad++.exe"';
   // await execCommand(notepadPlusPlusPath);
   await execCommand(notepadPlusPlusPath);
-
-  await page.waitForTimeout(10000)
 
   const kill = 'taskkill /F /IM notepad++.exe';
   await execCommand(kill);
