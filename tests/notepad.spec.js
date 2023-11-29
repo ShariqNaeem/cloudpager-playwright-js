@@ -3,10 +3,16 @@ import { execCommand } from "../utility/command2";
 
 test("Launch and Close Notepad++", async ({ page }) => {
   // console.log("Notepad++ has been launched");
-  const notepadPlusPlusPath = '"C:\\Program Files\\Notepad++\\notepad++.exe"';
+  const notepadPlusPlusPath = '"C:\\Program Files\\Notepad++\\notepad.exe"';
   // await execCommand(notepadPlusPlusPath);
-  await execCommand(notepadPlusPlusPath);
+  // try {
+    await execCommand(notepadPlusPlusPath, true, "hdsabfjfh");
+    // console.log(`result: ${result}`);
 
+  // } catch (error) {
+  //   console.log(`Error: ${error.message}`);
+  // }
+  await page.waitForTimeout(5000)
   const kill = 'taskkill /F /IM notepad++.exe';
   await execCommand(kill);
 

@@ -1,10 +1,19 @@
-const { exec  } = require("child_process");
+const { exec } = require("child_process");
+const { expect } = require("@playwright/test");
 
-export async function execCommand(command) {
+export async function execCommand(
+  command,
+  isValidateMessage = false,
+  message = ""
+) {
   try {
-      await exec(command);
-      return;
+    await exec(command , (error, stdout, stderr)=> {
+      if (error && isValidateMessage) {
+        expect(error.message).toContain(message);
+      }
+    });
+    return;
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.log(`Error: ${error.message}`);
   }
 }

@@ -1,0 +1,8 @@
+{
+    "filePathError" : "The system cannot find the path specified.",
+    "autoDeployCommand" : "\"C:\\Program Files (x86)\\Numecent\\Cloudpager\\Cloudpager.exe\" autodeploy",
+    "notepadPlusPlusPath" : "\"C:\\Program Files\\Notepad++\\notepad++.exe\"",
+    "notepadKillCommand" : "taskkill /F /IM notepad++.exe",
+    "adobePath" : "\"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe\"",
+    "adobeKillPath" : "taskkill /F /IM Acrobat.exe"
+}

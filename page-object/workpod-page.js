@@ -141,20 +141,25 @@ exports.WorkpodPage = class WorkpodPage {
     }
 
     async removeApplication(name) {
-        await this.page.waitForSelector('tbody[role="rowgroup"] tr[role="row"]:first-child td:nth-child(2)')
-        const elements = await this.page.$$('tbody[role="rowgroup"] tr[role="row"] td:nth-child(2)');
-
-        for (let index = 1; index <= elements.length; index++) {
-            const text = await elements[index].textContent();
-            if (text.includes(name)) {
-                await this.page.locator(`tbody[role="rowgroup"] tr[role="row"]:nth-child(${index}) td:nth-child(7) button`).click();
-                await this.removeApplicationOption.click();
-                return;
-            }
+        const elementSelector = 'tbody[role="rowgroup"] tr[role="row"] td:nth-child(2)';
+        await this.page.waitForSelector(elementSelector);
+      
+        const elements = await this.page.$$(elementSelector);
+      
+        for (let index = 0; index < elements.length; index++) {
+          const text = await elements[index].textContent(); // Use `textContent` without parentheses
+          if (text && text.includes(name)) {faile
+            const buttonSelector = `tbody[role="rowgroup"] tr[role="row"]:nth-child(${index + 1}) td:nth-child(7) button`;
+            await this.page.waitForSelector(buttonSelector);
+            const button = await this.page.locator(buttonSelector);
+            await button.click();
+            await this.removeApplicationOption.click();
+            return;
+          }
         }
-
+      
         console.log(`Element with text "${name}" not found.`);
-    }
+      }        
 
     async dragAndDropWorkpod() {
         await this.page.waitForSelector('button.save-btn')
